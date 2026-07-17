@@ -421,7 +421,7 @@ def build_home():
       <p>Tell us your market, quantity and application — get a factory-direct proposal in 24 hours.</p>
       <div class="hero-actions">
         <a class="btn btn-lg btn-light" href="#" data-inquiry="Request a Quote" data-inquiry-title="Request a Bulk Quote">Start Inquiry</a>
-        <a class="btn btn-lg" style="background:#fff;color:var(--blue);border-color:#fff" href="https://wa.me/{SITE['whatsapp'].replace('+','')}" target="_blank" rel="noopener">WhatsApp Us</a>
+        <a class="btn btn-lg btn-light" href="https://wa.me/{SITE['whatsapp'].replace('+','')}" target="_blank" rel="noopener">WhatsApp Us</a>
       </div>
     </div>
   </div>

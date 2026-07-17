@@ -220,6 +220,13 @@ section{padding:74px 0}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .chip{background:var(--blue-soft);color:var(--blue-dark);font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:20px}
 
+/* ---------- Product model list ---------- */
+.models-full{margin:16px 0 6px;background:#fff;border:1px solid var(--line,#E5ECF4);border-radius:12px;padding:16px 18px}
+.models-full h4{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--blue-dark);margin:0 0 10px}
+.modlist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.modlist li{font-size:13.5px;color:#33475b;padding-left:18px;position:relative;line-height:1.5}
+.modlist li:before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--blue,#1f6ed4)}
+
 /* ---------- Certs ---------- */
 .cert{display:flex;flex-direction:column;align-items:center;text-align:center;padding:28px 18px}
 .cert .badge{width:78px;height:78px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-weight:800;font-size:15px;margin-bottom:14px;border:2px solid #D6E6F7}

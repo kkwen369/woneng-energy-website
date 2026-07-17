@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import os, datetime
+import os, datetime, json
 from data import (SITE, NAV, CATEGORIES, PRODUCTS, SOLUTIONS, PROJECTS,
                   CERTS, STATS)
 
 OUT = os.path.join(os.path.dirname(__file__), "..")
+BASE_URL = SITE.get("base_url", "https://" + SITE["domain"]).rstrip("/")
 def w(path, html):
     full = os.path.join(OUT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
@@ -13,8 +14,59 @@ def w(path, html):
 def esc(s):
     return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
+def jsonld(data):
+    return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
+
+def org_ld():
+    return {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": SITE["brand_full"],
+        "alternateName": SITE["brand"],
+        "url": BASE_URL + "/",
+        "logo": BASE_URL + "/images/hero-home.webp",
+        "email": SITE["email"],
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": SITE["address"],
+            "addressCountry": "CN",
+        },
+        "contactPoint": [{
+            "@type": "ContactPoint",
+            "telephone": SITE["whatsapp"].replace(" ", ""),
+            "contactType": "sales",
+            "areaServed": "Worldwide",
+        }],
+    }
+
+def website_ld():
+    return {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": SITE["brand"],
+        "url": BASE_URL + "/",
+        "publisher": {"@type": "Organization", "name": SITE["brand_full"]},
+    }
+
+def breadcrumb_ld(items):
+    """items = list of (name, rel_url)."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1,
+             "name": n, "item": BASE_URL + "/" + u}
+            for i, (n, u) in enumerate(items)
+        ],
+    }
+
 # ---------------- shared chrome ----------------
-def head(title, desc, kw, bp=""):
+def head(title, desc, kw, bp="", url="", og_image="", og_type="website", json_ld=None):
+    canonical = BASE_URL + "/" + url if url else BASE_URL + "/"
+    ogimg = (BASE_URL + "/" + og_image) if og_image else (BASE_URL + "/images/hero-home.webp")
+    jld = ""
+    if json_ld:
+        jld = "".join(jsonld(d) for d in json_ld) if isinstance(json_ld, list) else jsonld(json_ld)
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,8 +75,21 @@ def head(title, desc, kw, bp=""):
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
 <meta name="keywords" content="{esc(kw)}">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://{SITE['domain']}/{bp}">
+<meta name="author" content="{esc(SITE['brand_full'])}">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="{canonical}">
+<meta property="og:type" content="{og_type}">
+<meta property="og:site_name" content="{esc(SITE['brand_full'])}">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(desc)}">
+<meta property="og:url" content="{canonical}">
+<meta property="og:image" content="{ogimg}">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{esc(title)}">
+<meta name="twitter:description" content="{esc(desc)}">
+<meta name="twitter:image" content="{ogimg}">
+{jld}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -125,7 +190,8 @@ def inquiry_modal(bp=""):
 def scripts(bp=""):
     return f'<script src="{bp}js/main.js"></script>'
 
-def page(title, desc, kw, body, active="", bp="", banner=None, breadcrumb=None):
+def page(title, desc, kw, body, active="", bp="", banner=None, breadcrumb=None,
+          og_image="", og_type="website", json_ld=None, url=""):
     """Full page assembly. banner=(eyebrow,title,sub) for inner pages."""
     h = ""
     if banner:
@@ -144,7 +210,8 @@ def page(title, desc, kw, body, active="", bp="", banner=None, breadcrumb=None):
     </div>
   </div>
 </section>'''
-    return (head(title, desc, kw, bp) +
+    return (head(title, desc, kw, bp, url=url, og_image=og_image,
+                 og_type=og_type, json_ld=json_ld) +
             '<body>' + header(active, bp) + h + body +
             inquiry_float() + inquiry_modal(bp) +
             footer(bp) + scripts(bp) + '</body></html>')
@@ -164,7 +231,7 @@ def build_home():
     prod_cards = ""
     for p in PRODUCTS:
         prod_cards += f'''<a class="card pcard" href="products/{p['slug']}.html">
-          <div class="thumb" style="background-image:url('images/products/{os.path.basename(p['img'])}')"><span class="tag">{esc(p['cat_name'].split()[0])}</span></div>
+          <div class="thumb" role="img" aria-label="{esc(p['name'])}" style="background-image:url('images/products/{os.path.basename(p['img'])}')"><span class="tag">{esc(p['cat_name'].split()[0])}</span></div>
           <div class="body">
             <h3>{esc(p['name'])}</h3>
             <div class="meta">{esc(p['models'])}</div>
@@ -277,7 +344,9 @@ def build_home():
     return page("Woneng — Solar Street Lights & Energy Storage Manufacturer | Factory Direct",
                 "Woneng is a B2B manufacturer of solar street lights, solar flood lights and LiFePO4 energy storage systems. Factory direct wholesale, OEM/ODM, Africa & Nigeria off-grid solar solutions.",
                 "solar street light, solar energy storage, Nigeria solar street light, Africa off-grid solar system, solar flood light, Powerwall battery, Woneng",
-                body, active="index.html")
+                body, active="index.html", url="index.html",
+                og_image="images/hero-home.webp",
+                json_ld=[org_ld(), website_ld()])
 
 # ---------------- ABOUT ----------------
 def build_about():
@@ -349,7 +418,9 @@ def build_about():
     return page("About Woneng — Solar & Energy Storage Manufacturer | Zhaoqing Woneng",
                 "Zhaoqing Woneng High-Tech Co., Ltd. is a B2B new-energy exporter with 15 years of solar manufacturing and export experience, focused on Africa and global off-grid markets.",
                 "about Woneng, solar manufacturer China, Zhaoqing Woneng, solar street light factory, energy storage manufacturer",
-                body, active="about.html")
+                body, active="about.html", url="about.html",
+                og_image="images/hero-factory.webp",
+                json_ld=[breadcrumb_ld([("Home", "index.html"), ("About Us", "about.html")]), org_ld()])
 
 # ---------------- PRODUCTS INDEX ----------------
 def build_products_index():
@@ -359,7 +430,7 @@ def build_products_index():
         for p in PRODUCTS:
             if p["cat"] != cat_id: continue
             cards += f'''<a class="card pcard" href="products/{p['slug']}.html">
-              <div class="thumb" style="background-image:url('images/products/{os.path.basename(p['img'])}')"><span class="tag">{esc(p['cat_name'].split()[0])}</span></div>
+              <div class="thumb" role="img" aria-label="{esc(p['name'])}" style="background-image:url('images/products/{os.path.basename(p['img'])}')"><span class="tag">{esc(p['cat_name'].split()[0])}</span></div>
               <div class="body"><h3>{esc(p['name'])}</h3><div class="meta">{esc(p['models'])}</div><div class="more">View product →</div></div></a>'''
         groups += f'''<div style="margin-bottom:46px">
           <h2 style="margin-bottom:18px">{esc(cat_name)}</h2>
@@ -385,7 +456,9 @@ def build_products_index():
     return page("Products — Solar Street Lights & Energy Storage | Woneng",
                 "Woneng product catalog: AIO/split solar street lights, solar flood lights, portable & container storage, hybrid inverters, Powerwall and rack batteries, PV accessories.",
                 "solar street light, solar flood light, portable energy storage, hybrid inverter, Powerwall battery, rack battery, BESS, PV accessories, Woneng products",
-                body, active="products.html")
+                body, active="products.html", url="products.html",
+                og_image="images/hero-products.webp",
+                json_ld=[breadcrumb_ld([("Home", "index.html"), ("Products", "products.html")]), org_ld()])
 
 # ---------------- PRODUCT DETAIL ----------------
 def build_product(p):
@@ -398,6 +471,13 @@ def build_product(p):
         <div class="thumb" style="background-image:url('../images/products/{os.path.basename(x['img'])}')"></div>
         <div class="body"><h3>{esc(x['name'])}</h3><div class="meta">{esc(x['models'])}</div><div class="more">View →</div></div></a>''' for x in rel)
     sol_link = SOLUTIONS[0]
+    mf = ""
+    if p.get("models_full"):
+        rows = "".join(f"<li>{esc(m)}</li>" for m in p["models_full"])
+        mf = f'''<div class="models-full">
+        <h4>Available Models</h4>
+        <ul class="modlist">{rows}</ul>
+      </div>'''
     body = f'''
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('../images/hero-products.webp')"></div>
@@ -411,12 +491,13 @@ def build_product(p):
 
 <section><div class="wrap">
   <div class="split">
-    <div class="media" style="background-image:url('../images/products/{os.path.basename(p['img'])}')"></div>
+    <div class="media" role="img" aria-label="{esc(p['name'])}" style="background-image:url('../images/products/{os.path.basename(p['img'])}')"></div>
     <div>
       <h2>{esc(p['name'])}</h2>
       <p>{esc(p['intro'])}</p>
       <div style="margin:18px 0"><span class="chip" style="background:var(--blue);color:#fff">Models: {esc(p['models'])}</span></div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
+      {mf}
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
         <a class="btn btn-lg" href="#" data-inquiry="{esc(p['name'])}" data-inquiry-title="Quote: {esc(p['name'])}">Get a Quote</a>
         <a class="btn btn-lg btn-ghost" href="../contact.html">Contact Sales</a>
       </div>
@@ -453,10 +534,33 @@ def build_product(p):
   <div class="hero-actions"><a class="btn btn-lg btn-light" href="#" data-inquiry="{esc(p['name'])}" data-inquiry-title="Quote: {esc(p['name'])}">Request Quote</a></div>
 </div></div></section>
 '''
+    p_url = f"products/{slug}.html"
+    canonical = BASE_URL + "/" + p_url
+    product_ld = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": p["name"],
+        "image": [BASE_URL + "/" + p["img"]],
+        "description": p["intro"],
+        "brand": {"@type": "Brand", "name": SITE["brand_full"]},
+        "category": p["cat_name"],
+        "model": p["models"],
+        "additionalProperty": [
+            {"@type": "PropertyValue", "name": k, "value": v} for k, v in p["specs"]
+        ],
+        "offers": {
+            "@type": "Offer",
+            "availability": "https://schema.org/InStock",
+            "priceCurrency": "USD",
+            "seller": {"@type": "Organization", "name": SITE["brand_full"]},
+        },
+    }
+    bc_ld = breadcrumb_ld([("Home", "index.html"), ("Products", "products.html"), (p["name"], p_url)])
     return page(f"{p['name']} — {p['cat_name']} | Woneng",
                 f"{p['name']} by Woneng: {p['tagline']} Models {p['models']}. Factory-direct B2B pricing, OEM/ODM, global export.",
                 f"{p['name']}, {p['cat_name']}, Woneng, solar, Nigeria, Africa, wholesale, OEM",
-                body, active="products.html", bp="../")
+                body, active="products.html", bp="../", url=p_url,
+                og_image=p["img"], json_ld=[bc_ld, product_ld])
 
 # ---------------- SOLUTIONS ----------------
 def build_solutions_index():
@@ -480,7 +584,9 @@ def build_solutions_index():
     return page("Solutions — Off-grid Solar & Storage for Africa & Industry | Woneng",
                 "Woneng B2B solutions: Africa off-grid solar, municipal street lighting, residential PV+storage, C&I storage, outdoor lighting, Nigeria local and rural Africa solar.",
                 "Africa off-grid solar solution, Nigeria solar solution, municipal solar lighting, residential PV storage, industrial energy storage, Woneng solutions",
-                body, active="solutions.html")
+                body, active="solutions.html", url="solutions.html",
+                og_image="images/hero-solutions.webp",
+                json_ld=[breadcrumb_ld([("Home", "index.html"), ("Solutions", "solutions.html")]), org_ld()])
 
 def build_solution(s):
     simg = "../" + s['img']
@@ -514,10 +620,13 @@ def build_solution(s):
   <div class="hero-actions"><a class="btn btn-lg btn-light" href="#" data-inquiry="{esc(s['title'])}" data-inquiry-title="Solution Inquiry: {esc(s['title'])}">Start Inquiry</a></div>
 </div></div></section>
 '''
+    s_url = f"solutions/{s['slug']}.html"
     return page(f"{s['title']} | Woneng",
                 f"{s['title']}: {s['lead']} Woneng B2B solar & storage solutions for Africa and global markets.",
                 f"{s['title']}, Woneng solution, Nigeria, Africa, solar, off-grid",
-                body, active="solutions.html", bp="../")
+                body, active="solutions.html", bp="../", url=s_url,
+                og_image=s["img"], og_type="article",
+                json_ld=[breadcrumb_ld([("Home", "index.html"), ("Solutions", "solutions.html"), (s["title"], s_url)]), org_ld()])
 
 # ---------------- PROJECTS ----------------
 def build_projects():
@@ -553,7 +662,9 @@ def build_projects():
     return page("Projects — Global Solar & Storage Deployments | Woneng",
                 "Woneng overseas projects: Nigeria, Zambia, Sri Lanka, Dubai, Indonesia and Malaysia solar street lighting, storage and micro-grid deployments.",
                 "solar project Nigeria, Zambia solar, Dubai solar storage, Sri Lanka lighting, Indonesia microgrid, Woneng projects",
-                body, active="projects.html")
+                body, active="projects.html", url="projects.html",
+                og_image="images/hero-projects.webp",
+                json_ld=[breadcrumb_ld([("Home", "index.html"), ("Projects", "projects.html")]), org_ld()])
 
 # ---------------- FACTORY ----------------
 def build_factory():
@@ -612,7 +723,9 @@ def build_factory():
     return page("Factory & Capacity — Woneng Solar & Storage Manufacturing",
                 "Woneng Zhaoqing factory: standardized workshops, 50,000 batteries/year, R&D, QC, OEM/ODM and global logistics for B2B solar and storage supply.",
                 "solar factory China, energy storage manufacturer, OEM ODM solar, Woneng factory, battery production",
-                body, active="factory.html")
+                body, active="factory.html", url="factory.html",
+                og_image="images/hero-factory.webp",
+                json_ld=[breadcrumb_ld([("Home", "index.html"), ("Factory & Capacity", "factory.html")]), org_ld()])
 
 # ---------------- CERTIFICATIONS ----------------
 def build_certs():
@@ -641,9 +754,11 @@ def build_certs():
 </div></section>
 '''
     return page("Certifications — Woneng ISO/CE/RoHS/IEC Certified",
-                "Woneng holds ISO9001, ISO14001, CE, RoHS, IEC, MSDS, UN38.3 and offers OEM/ODM customization for global B2B solar and storage trade.",
+                "Woneng holds ISO9001, ISO14001, ISO45001, IATF16949, CE, RoHS, IEC, MSDS, UN38.3 and offers OEM/ODM customization for global B2B solar and storage trade.",
                 "solar certification, CE RoHS IEC, ISO9001 solar, Woneng certified, battery MSDS UN38.3",
-                body, active="certifications.html")
+                body, active="certifications.html", url="certifications.html",
+                og_image="images/hero-products.webp",
+                json_ld=[breadcrumb_ld([("Home", "index.html"), ("Certifications", "certifications.html")]), org_ld()])
 
 # ---------------- CONTACT ----------------
 def build_contact():
@@ -693,16 +808,32 @@ def build_contact():
     return page("Contact Woneng — Solar & Storage Manufacturer | Get a Quote",
                 "Contact Woneng for solar street lights, flood lights and energy storage. Email, WhatsApp, factory address and B2B inquiry form for quotes and OEM/ODM.",
                 "contact Woneng, solar manufacturer contact, request solar quote, Nigeria solar supplier, Woneng email",
-                body, active="contact.html")
+                body, active="contact.html", url="contact.html",
+                og_image="images/hero-projects.webp",
+                json_ld=[breadcrumb_ld([("Home", "index.html"), ("Contact", "contact.html")]), org_ld()])
 
 # ---------------- SEO FILES ----------------
 def build_seo():
-    pages = ["index.html", "about.html", "products.html", "solutions.html",
-             "projects.html", "factory.html", "certifications.html", "contact.html"]
-    for p in PRODUCTS: pages.append(f"products/{p['slug']}.html")
-    for s in SOLUTIONS: pages.append(f"solutions/{s['slug']}.html")
+    # (path, priority, changefreq)
+    pages = [
+        ("index.html", 1.0, "daily"),
+        ("products.html", 0.9, "weekly"),
+        ("solutions.html", 0.9, "weekly"),
+        ("about.html", 0.8, "monthly"),
+        ("projects.html", 0.8, "monthly"),
+        ("factory.html", 0.8, "monthly"),
+        ("certifications.html", 0.7, "monthly"),
+        ("contact.html", 0.6, "yearly"),
+    ]
+    for p in PRODUCTS:
+        pages.append((f"products/{p['slug']}.html", 0.7, "weekly"))
+    for s in SOLUTIONS:
+        pages.append((f"solutions/{s['slug']}.html", 0.7, "weekly"))
     today = datetime.date.today().isoformat()
-    urls = "\n".join(f"  <url><loc>https://{SITE['domain']}/{p}</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>" for p in pages)
+    urls = "\n".join(
+        f'  <url><loc>{BASE_URL}/{p}</loc><lastmod>{today}</lastmod>'
+        f'<changefreq>{cf}</changefreq><priority>{pr}</priority></url>'
+        for p, pr, cf in pages)
     sitemap = f'''<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {urls}
@@ -710,7 +841,7 @@ def build_seo():
     w("sitemap.xml", sitemap)
     w("robots.txt", f"""User-agent: *
 Allow: /
-Sitemap: https://{SITE['domain']}/sitemap.xml
+Sitemap: {BASE_URL}/sitemap.xml
 """)
 
 # ---------------- BUILD ALL ----------------

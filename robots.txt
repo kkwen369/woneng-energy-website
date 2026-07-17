@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://entelechyenergy.com/sitemap.xml
+Sitemap: https://kkwen369.github.io/woneng-energy-website/sitemap.xml

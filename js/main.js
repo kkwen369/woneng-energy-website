@@ -62,15 +62,65 @@
   if (modal) modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
 
-  // Forms (client-side demo submit)
-  document.querySelectorAll('form[data-demo]').forEach(function (form) {
+  // Forms — Web3Forms submit with validation + mailto fallback (no backend needed)
+  function showOk(form) {
+    var ok = form.querySelector('.form-ok');
+    if (ok) { ok.classList.add('show'); setTimeout(function () { ok.classList.remove('show'); }, 6000); }
+  }
+  function mailtoFallback(form) {
+    var d = new FormData(form);
+    var lines = 'Name: ' + (d.get('name') || '') + '\n' +
+                'Company: ' + (d.get('company') || '') + '\n' +
+                'Email: ' + (d.get('email') || '') + '\n' +
+                'WhatsApp/Phone: ' + (d.get('phone') || '') + '\n' +
+                'Product/Category: ' + (d.get('product') || '') + '\n' +
+                'Target Market: ' + (d.get('market') || '') + '\n' +
+                'Need: ' + (d.get('message') || '');
+    var subj = 'Woneng Inquiry — ' + (d.get('product') || 'Website');
+    window.location.href = 'mailto:sales@entelechyenergy.com?subject=' +
+      encodeURIComponent(subj) + '&body=' + encodeURIComponent(lines);
+  }
+  document.querySelectorAll('form[data-web3]').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var ok = form.querySelector('.form-ok');
-      if (ok) ok.classList.add('show');
-      form.reset();
-      if (form.closest('.modal-back')) setTimeout(closeModal, 1600);
-      if (ok) setTimeout(function () { ok.classList.remove('show'); }, 5000);
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      var btn = form.querySelector('button[type="submit"]');
+      var orig = btn ? btn.textContent : '';
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+      var data = new FormData(form);
+      // Honeypot — if filled, treat as bot and silently "succeed" without sending.
+      if (data.get('company_website')) {
+        showOk(form); form.reset();
+        if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+        if (btn) { btn.disabled = false; btn.textContent = orig; }
+        return;
+      }
+      fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (j && j.success) { showOk(form); form.reset(); }
+          else { mailtoFallback(form); }
+        })
+        .catch(function () { mailtoFallback(form); })
+        .finally(function () {
+          if (btn) { btn.disabled = false; btn.textContent = orig; }
+          if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+        });
     });
   });
+
+  // Product center — category filter
+  var filterWrap = document.querySelector('.cat-filter');
+  if (filterWrap) {
+    filterWrap.querySelectorAll('.chip-filter').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        filterWrap.querySelectorAll('.chip-filter').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var cat = btn.getAttribute('data-cat');
+        document.querySelectorAll('.series').forEach(function (s) {
+          s.style.display = (cat === 'all' || s.getAttribute('data-cat') === cat) ? '' : 'none';
+        });
+      });
+    });
+  }
 })();

@@ -11,6 +11,105 @@ def featured_products():
     """Core lines (featured=True) used on home/footer; scraped SKUs default False."""
     return [p for p in PRODUCTS if p.get("featured", True)]
 
+# ---------------- product series grouping ----------------
+# Web3Forms endpoint (no backend needed). Replace FORM_KEY with a free key from
+# https://web3forms.com — it emails inquiries to SITE["email"]. A mailto fallback
+# in main.js guarantees no lead is lost even before the key is set.
+FORM_ENDPOINT = "https://api.web3forms.com/form"
+FORM_KEY = "YOUR_WEB3FORMS_ACCESS_KEY"
+
+SERIES_RULES = [
+    ("all-in-two", "ait", "AIT Split Solar Street Light"),
+    ("all-in-one-solar-street-light-bst-aio", "aio", "AIO Solar Street Light"),
+    ("solar-flood-light", "flood-f05", "Solar Flood Light F05"),
+    ("municipal-led-street-light", "municipal", "Municipal AC LED Street Light"),
+    ("solar-street-light-poles", "poles", "Solar Street Light Pole"),
+    ("gbet-solar-street-light-poles", "poles", "Solar Street Light Pole"),
+    ("light-poles-accessories", "poles", "Solar Street Light Pole"),
+    ("clover-solar-security-light", "security", "Solar Security Light"),
+    ("solar-wall-light", "wall", "Solar Wall Light"),
+    ("dimond-series-solar-wall-light", "wall", "Solar Wall Light"),
+    ("solar-post-light", "post", "Solar Post Light"),
+    ("solar-decoration-light", "decoration", "Solar Decoration Light"),
+    ("solar-garden-spotlight", "spotlight", "Solar Garden Spotlight"),
+    ("solar-ground-plug-in", "ground-plug", "Solar Ground Plug-in Light"),
+    ("solar-garden-light", "garden-landscape", "Solar Garden & Landscape Light"),
+    ("solar-garden-lights", "garden-landscape", "Solar Garden & Landscape Light"),
+    ("solar-landscape-lights", "garden-landscape", "Solar Garden & Landscape Light"),
+    ("solar-garden-landscape-light", "garden-landscape", "Solar Garden & Landscape Light"),
+    ("aio-solar-street-light", "aio", "AIO Solar Street Light"),
+    ("ait-solar-street-light", "ait", "AIT Split Solar Street Light"),
+    ("solar-flood-light-f05", "flood-f05", "Solar Flood Light F05"),
+]
+SERIES_ORDER = ["aio", "ait", "flood-f05", "poles", "municipal", "garden-landscape",
+                "wall", "post", "decoration", "spotlight", "ground-plug", "security",
+                "portable-energy-storage", "solar-power-generator", "solar-hybrid-inverter",
+                "powerwall-energy-storage-battery", "rack-mounted-high-voltage-battery",
+                "industrial-commercial-bess", "pv-supporting-accessories"]
+
+def classify_series(p):
+    s = p["slug"]
+    for key, slug, name in SERIES_RULES:
+        if key in s:
+            return slug, name
+    return s, p["name"]
+
+def series_groups():
+    groups = {}
+    for p in PRODUCTS:
+        slug, name = classify_series(p)
+        groups.setdefault(slug, {"name": name, "cat": p["cat"], "items": []})
+        groups[slug]["items"].append(p)
+    out = []
+    for slug in SERIES_ORDER:
+        if slug in groups:
+            out.append((slug, groups[slug]["name"], groups[slug]["cat"], groups[slug]["items"]))
+    for slug, g in groups.items():
+        if slug not in SERIES_ORDER:
+            out.append((slug, g["name"], g["cat"], g["items"]))
+    return out
+
+def cat_name_of(cat_id):
+    for cname, cid in CATEGORIES:
+        if cid == cat_id:
+            return cname
+    return cat_id
+
+def product_card(p, bp=""):
+    return f'''<a class="card pcard" href="{bp}products/{p['slug']}.html">
+      <div class="thumb" role="img" aria-label="{esc(p['name'])}" style="background-image:url('{bp}images/products/{os.path.basename(p['img'])}')"><span class="tag">{esc(p['cat_name'].split()[0])}</span></div>
+      <div class="body"><h3>{esc(p['name'])}</h3><div class="meta">{esc(p['models'])}</div><div class="more">View product →</div></div></a>'''
+
+KEY_SPEC_KEYS = ["Power range", "Power", "Capacity", "Battery", "Protection", "CCT", "LED chips"]
+def key_specs(p):
+    chips = [("Model", p["models"])]
+    for k, v in p["specs"]:
+        if k in KEY_SPEC_KEYS and len(chips) < 4:
+            chips.append((k, v))
+        if len(chips) >= 4:
+            break
+    return chips
+
+def inquiry_form(bp="", title="New Inquiry"):
+    """Shared inquiry form wired to Web3Forms (see FORM_KEY). Includes a honeypot."""
+    return f'''<form class="inquiry-form" action="{FORM_ENDPOINT}" method="POST" data-web3>
+      <input type="hidden" name="access_key" value="{FORM_KEY}">
+      <input type="hidden" name="subject" value="Woneng Inquiry — {esc(title)}">
+      <input type="hidden" name="from_name" value="Woneng Website">
+      <input type="text" name="company_website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="form-grid">
+        <div class="field"><label>Name *</label><input name="name" required></div>
+        <div class="field"><label>Company *</label><input name="company" required></div>
+        <div class="field"><label>Email *</label><input type="email" name="email" required></div>
+        <div class="field"><label>WhatsApp / Phone</label><input name="phone"></div>
+        <div class="field"><label>Product / Category</label><input id="f-product" name="product"></div>
+        <div class="field"><label>Target Market</label><input name="market" placeholder="e.g. Nigeria"></div>
+        <div class="field full"><label>Quantity &amp; Project Need</label><textarea name="message" placeholder="Tell us your quantity, project type and timeline..."></textarea></div>
+        <div class="field full"><button class="btn btn-lg" type="submit">Send Inquiry</button></div>
+      </div>
+      <div class="form-ok">✓ Thank you! Our international team will reply within 24 hours.</div>
+    </form>'''
+
 
 OUT = os.path.join(os.path.dirname(__file__), "..")
 BASE_URL = SITE.get("base_url", "https://" + SITE["domain"]).rstrip("/")
@@ -179,19 +278,7 @@ def inquiry_modal(bp=""):
   <div class="modal">
     <div class="modal-head"><h3 id="inquiryModalTitle">Request a Quote</h3><button class="modal-close" aria-label="Close">×</button></div>
     <div class="modal-body">
-      <form data-demo action="#" method="post">
-        <div class="form-grid">
-          <div class="field"><label>Name *</label><input name="name" required></div>
-          <div class="field"><label>Company *</label><input name="company" required></div>
-          <div class="field"><label>Email *</label><input type="email" name="email" required></div>
-          <div class="field"><label>WhatsApp / Phone</label><input name="phone"></div>
-          <div class="field"><label>Product / Category</label><input id="f-product" name="product"></div>
-          <div class="field"><label>Target Market</label><input name="market" placeholder="e.g. Nigeria"></div>
-          <div class="field full"><label>Quantity &amp; Project Need</label><textarea name="need" placeholder="Tell us your quantity, project type and timeline..."></textarea></div>
-          <div class="field full"><button class="btn btn-lg" type="submit">Send Inquiry</button></div>
-        </div>
-        <div class="form-ok">✓ Thank you! Our international team will reply within 24 hours.</div>
-      </form>
+      {inquiry_form(bp, "Request a Quote")}
     </div>
   </div>
 </div>'''
@@ -423,17 +510,27 @@ def build_about():
 
 # ---------------- PRODUCTS INDEX ----------------
 def build_products_index():
-    groups = ""
-    for cat_name, cat_id in CATEGORIES:
-        cards = ""
-        for p in PRODUCTS:
-            if p["cat"] != cat_id: continue
-            cards += f'''<a class="card pcard" href="products/{p['slug']}.html">
-              <div class="thumb" role="img" aria-label="{esc(p['name'])}" style="background-image:url('images/products/{os.path.basename(p['img'])}')"><span class="tag">{esc(p['cat_name'].split()[0])}</span></div>
-              <div class="body"><h3>{esc(p['name'])}</h3><div class="meta">{esc(p['models'])}</div><div class="more">View product →</div></div></a>'''
-        groups += f'''<div style="margin-bottom:46px">
-          <h2 style="margin-bottom:18px">{esc(cat_name)}</h2>
-          <div class="grid grid-3">{cards}</div></div>'''
+    groups = series_groups()
+    # category filter buttons
+    cats = [("all", "All Products")] + [(cid, cname) for cname, cid in CATEGORIES]
+    filter_btns = "".join(
+        f'<button class="chip-filter{" active" if cid == "all" else ""}" data-cat="{cid}">{esc(cname)}</button>'
+        for cid, cname in cats)
+    body_groups = ""
+    for i, (slug, name, cat, items) in enumerate(groups):
+        cards = "".join(product_card(p) for p in items)
+        open_attr = "open" if i < 2 else ""
+        body_groups += f'''<details class="series" {open_attr} data-cat="{esc(cat)}">
+          <summary><div class="series-head">
+            <h2>{esc(name)}</h2>
+            <span class="series-meta">
+              <span class="tag">{esc(cat_name_of(cat).split()[0])}</span>
+              <span class="count">{len(items)} model{"s" if len(items) != 1 else ""}</span>
+              <span class="expand">+ expand</span>
+            </span>
+          </div></summary>
+          <div class="grid grid-3">{cards}</div>
+        </details>'''
     body = f'''
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-products.webp')"></div>
@@ -441,11 +538,13 @@ def build_products_index():
     <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Products</div>
     <div class="eyebrow" style="color:#BBD6F2;letter-spacing:2px;text-transform:uppercase;font-size:13px;font-weight:700;margin:6px 0">Product Center</div>
     <h1>Solar Lighting &amp; Energy Storage Products</h1>
-    <p>Complete B2B product matrix — every series with specs, advantages and inquiry-ready pages.</p>
+    <p>Browse by product series — click a series to see all models, specs and inquiry pages.</p>
   </div></div>
 </section>
-<section><div class="wrap">{groups}
-  <div class="cta" style="margin-top:20px">
+<section><div class="wrap">
+  <div class="cat-filter">{filter_btns}</div>
+  <div class="series-list">{body_groups}</div>
+  <div class="cta" style="margin-top:28px">
     <h2>Can't find the exact model?</h2>
     <p>We do OEM/ODM and project customization. Send us your spec sheet.</p>
     <div class="hero-actions"><a class="btn btn-lg btn-light" href="#" data-inquiry="Custom OEM/ODM Request" data-inquiry-title="Custom OEM/ODM Request">Request Custom Build</a></div>
@@ -453,7 +552,7 @@ def build_products_index():
 </div></section>
 '''
     return page("Products — Solar Street Lights & Energy Storage | Woneng",
-                "Woneng product catalog: AIO/split solar street lights, solar flood lights, portable & container storage, hybrid inverters, Powerwall and rack batteries, PV accessories.",
+                "Woneng product catalog by series: AIO/split solar street lights, solar flood lights, garden & decorative lights, portable & container storage, hybrid inverters, Powerwall and rack batteries, PV accessories.",
                 "solar street light, solar flood light, portable energy storage, hybrid inverter, Powerwall battery, rack battery, BESS, PV accessories, Woneng products",
                 body, active="products.html", url="products.html",
                 og_image="images/hero-products.webp",
@@ -462,21 +561,24 @@ def build_products_index():
 # ---------------- PRODUCT DETAIL ----------------
 def build_product(p):
     slug = p["slug"]
-    adv = "".join(f'<div class="card"><div class="ic">✓</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for t, d in p["advantages"])
+    chips = "".join(f'<span class="keychip"><b>{esc(k)}</b> {esc(v)}</span>' for k, v in key_specs(p))
+    adv = "".join(f'<li><span class="ck">✓</span><div><b>{esc(t)}</b><p>{esc(d)}</p></div></li>' for t, d in p["advantages"])
     spec_rows = "".join(f'<tr><th>{esc(k)}</th><td>{esc(v)}</td></tr>' for k, v in p["specs"])
-    chips = "".join(f'<span class="chip">{esc(a)}</span>' for a in p["applications"])
-    rel = [x for x in PRODUCTS if x["cat"] == p["cat"] and x["slug"] != slug][:3]
-    rel_cards = "".join(f'''<a class="card pcard" href="{x['slug']}.html">
-        <div class="thumb" style="background-image:url('../images/products/{os.path.basename(x['img'])}')"></div>
-        <div class="body"><h3>{esc(x['name'])}</h3><div class="meta">{esc(x['models'])}</div><div class="more">View →</div></div></a>''' for x in rel)
+    app_chips = "".join(f'<span class="chip">{esc(a)}</span>' for a in p["applications"])
+    # series switcher — all models in the same series
+    sslug = classify_series(p)[0]
+    sibs = [x for x in PRODUCTS if classify_series(x)[0] == sslug]
+    switcher = ""
+    for x in sibs:
+        if x["slug"] == slug:
+            switcher += f'<span class="sw active" aria-current="true">{esc(x["models"])}</span>'
+        else:
+            switcher += f'<a class="sw" href="{x["slug"]}.html">{esc(x["models"])}</a>'
+    rel = [x for x in sibs if x["slug"] != slug][:3]
+    if not rel:  # fall back to same-category if series has only one model
+        rel = [x for x in PRODUCTS if x["cat"] == p["cat"] and x["slug"] != slug][:3]
+    rel_cards = "".join(product_card(x, bp="../") for x in rel)
     sol_link = SOLUTIONS[0]
-    mf = ""
-    if p.get("models_full"):
-        rows = "".join(f"<li>{esc(m)}</li>" for m in p["models_full"])
-        mf = f'''<div class="models-full">
-        <h4>Available Models</h4>
-        <ul class="modlist">{rows}</ul>
-      </div>'''
     body = f'''
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('../images/hero-products.webp')"></div>
@@ -489,45 +591,51 @@ def build_product(p):
 </section>
 
 <section><div class="wrap">
-  <div class="split">
-    <div class="media" role="img" aria-label="{esc(p['name'])}" style="background-image:url('../images/products/{os.path.basename(p['img'])}')"></div>
-    <div>
-      <h2>{esc(p['name'])}</h2>
-      <p>{esc(p['intro'])}</p>
-      <div style="margin:18px 0"><span class="chip" style="background:var(--blue);color:#fff">Models: {esc(p['models'])}</span></div>
-      {mf}
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+  <div class="psplit">
+    <div class="pmedia" role="img" aria-label="{esc(p['name'])}" style="background-image:url('../images/products/{os.path.basename(p['img'])}')"></div>
+    <div class="pinfo">
+      <div class="keychips">{chips}</div>
+      <h2 class="pname">{esc(p['name'])}</h2>
+      <p class="ptag">{esc(p['tagline'])}</p>
+      <p class="pintro">{esc(p['intro'])}</p>
+      <div class="pactions">
         <a class="btn btn-lg" href="#" data-inquiry="{esc(p['name'])}" data-inquiry-title="Quote: {esc(p['name'])}">Get a Quote</a>
-        <a class="btn btn-lg btn-ghost" href="../contact.html">Contact Sales</a>
+        <a class="btn btn-lg btn-ghost" href="../downloads/Solar-Light-Catalog-2026.pdf" target="_blank" rel="noopener">Download Catalog (PDF)</a>
       </div>
     </div>
   </div>
 </div></section>
 
 <section class="section-alt"><div class="wrap">
-  <div class="section-head"><div class="eyebrow">Key Advantages</div><h2>Why This Product</h2></div>
-  <div class="grid grid-3">{adv}</div>
-</div></section>
-
-<section><div class="wrap">
-  <div class="split">
-    <div>
-      <h2>Technical Specifications</h2>
-      <p class="muted">Typical parameters — customizable for project requirements.</p>
-      <table class="spectable"><tbody>{spec_rows}</tbody></table>
-    </div>
-    <div>
-      <h2>Applications</h2>
-      <p class="muted">Proven across global B2B deployment scenarios.</p>
-      <div class="chips" style="margin-top:8px">{chips}</div>
-      <div style="margin-top:26px"><a class="btn" href="../solutions/{sol_link['slug']}.html">See Matching Solution →</a></div>
-    </div>
+  <div class="switcher">
+    <span class="sw-label">Models in this series:</span>
+    <div class="sw-row">{switcher}</div>
   </div>
 </div></section>
 
-{('<section class="section-alt"><div class="wrap"><div class="section-head"><div class="eyebrow">Related Products</div><h2>From the Same Series</h2></div><div class="grid grid-3">'+rel_cards+'</div></div></section>') if rel_cards else ''}
+<section><div class="wrap">
+  <h2 class="h-sm">Key Advantages</h2>
+  <ul class="adv-compact">{adv}</ul>
+</div></section>
 
-<section><div class="wrap"><div class="cta">
+<section class="section-alt"><div class="wrap"><div class="split">
+  <div>
+    <details class="specs" open>
+      <summary>Technical Specifications</summary>
+      <p class="muted">Typical parameters — customizable for project requirements.</p>
+      <table class="spectable"><tbody>{spec_rows}</tbody></table>
+    </details>
+  </div>
+  <div>
+    <h2 class="h-sm">Applications</h2>
+    <div class="chips" style="margin:12px 0 20px">{app_chips}</div>
+    <a class="btn" href="../solutions/{sol_link['slug']}.html">See Matching Solution →</a>
+  </div>
+</div></div></section>
+
+{('<section><div class="wrap"><div class="section-head"><div class="eyebrow">Related</div><h2>From the Same Series</h2></div><div class="grid grid-3">'+rel_cards+'</div></div></section>') if rel_cards else ''}
+
+<section class="section-alt"><div class="wrap"><div class="cta">
   <h2>Quote {esc(p['name'])} for Your Project</h2>
   <p>Tell us quantity, market and timeline — factory-direct pricing in 24h.</p>
   <div class="hero-actions"><a class="btn btn-lg btn-light" href="#" data-inquiry="{esc(p['name'])}" data-inquiry-title="Quote: {esc(p['name'])}">Request Quote</a></div>
@@ -787,19 +895,7 @@ def build_contact():
     </div>
     <div class="card">
       <h3>Send an Inquiry</h3>
-      <form data-demo action="#" method="post">
-        <div class="form-grid">
-          <div class="field"><label>Name *</label><input name="name" required></div>
-          <div class="field"><label>Company *</label><input name="company" required></div>
-          <div class="field"><label>Email *</label><input type="email" name="email" required></div>
-          <div class="field"><label>WhatsApp / Phone</label><input name="phone"></div>
-          <div class="field"><label>Product / Category</label><input name="product"></div>
-          <div class="field"><label>Target Market</label><input name="market" placeholder="e.g. Nigeria"></div>
-          <div class="field full"><label>Quantity &amp; Project Need</label><textarea name="need" placeholder="Tell us your quantity, project type and timeline..."></textarea></div>
-          <div class="field full"><button class="btn btn-lg" type="submit">Send Inquiry</button></div>
-        </div>
-        <div class="form-ok">✓ Thank you! Our international team will reply within 24 hours.</div>
-      </form>
+      {inquiry_form(bp="", title="Website Contact")}
     </div>
   </div>
 </div></section>
@@ -858,8 +954,18 @@ def main():
     w("certifications.html", build_certs())
     w("contact.html", build_contact())
     build_seo()
-    # copy assets
+    # copy downloadable catalogs
     import shutil
+    dl_src = {
+        "Solar-Light-Catalog-2026.pdf": r"D:/网站/Solar Light Catalog 2026.pdf",
+        "Solar-System-Brochure-2026.pdf": r"D:/网站/2026.5 Solar System Brochure.pdf",
+    }
+    dl_dir = os.path.join(OUT, "downloads")
+    os.makedirs(dl_dir, exist_ok=True)
+    for dst_name, src_path in dl_src.items():
+        if os.path.exists(src_path):
+            shutil.copy(src_path, os.path.join(dl_dir, dst_name))
+    # copy assets
     for f in ["style.css", "main.js"]:
         src = os.path.join(os.path.dirname(__file__), "assets", f)
         dst = os.path.join(OUT, "css" if f.endswith(".css") else "js", f)

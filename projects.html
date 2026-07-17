@@ -113,19 +113,23 @@
   <div class="modal">
     <div class="modal-head"><h3 id="inquiryModalTitle">Request a Quote</h3><button class="modal-close" aria-label="Close">×</button></div>
     <div class="modal-body">
-      <form data-demo action="#" method="post">
-        <div class="form-grid">
-          <div class="field"><label>Name *</label><input name="name" required></div>
-          <div class="field"><label>Company *</label><input name="company" required></div>
-          <div class="field"><label>Email *</label><input type="email" name="email" required></div>
-          <div class="field"><label>WhatsApp / Phone</label><input name="phone"></div>
-          <div class="field"><label>Product / Category</label><input id="f-product" name="product"></div>
-          <div class="field"><label>Target Market</label><input name="market" placeholder="e.g. Nigeria"></div>
-          <div class="field full"><label>Quantity &amp; Project Need</label><textarea name="need" placeholder="Tell us your quantity, project type and timeline..."></textarea></div>
-          <div class="field full"><button class="btn btn-lg" type="submit">Send Inquiry</button></div>
-        </div>
-        <div class="form-ok">✓ Thank you! Our international team will reply within 24 hours.</div>
-      </form>
+      <form class="inquiry-form" action="https://api.web3forms.com/form" method="POST" data-web3>
+      <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+      <input type="hidden" name="subject" value="Woneng Inquiry — Request a Quote">
+      <input type="hidden" name="from_name" value="Woneng Website">
+      <input type="text" name="company_website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="form-grid">
+        <div class="field"><label>Name *</label><input name="name" required></div>
+        <div class="field"><label>Company *</label><input name="company" required></div>
+        <div class="field"><label>Email *</label><input type="email" name="email" required></div>
+        <div class="field"><label>WhatsApp / Phone</label><input name="phone"></div>
+        <div class="field"><label>Product / Category</label><input id="f-product" name="product"></div>
+        <div class="field"><label>Target Market</label><input name="market" placeholder="e.g. Nigeria"></div>
+        <div class="field full"><label>Quantity &amp; Project Need</label><textarea name="message" placeholder="Tell us your quantity, project type and timeline..."></textarea></div>
+        <div class="field full"><button class="btn btn-lg" type="submit">Send Inquiry</button></div>
+      </div>
+      <div class="form-ok">✓ Thank you! Our international team will reply within 24 hours.</div>
+    </form>
     </div>
   </div>
 </div><footer class="site-footer">

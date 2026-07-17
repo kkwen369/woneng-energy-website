@@ -785,15 +785,23 @@ def build_projects():
 
 # ---------------- FACTORY ----------------
 def build_factory():
+    FACTORY_ICONS = {
+        "workshop": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20v-8l6-4 6 4v8"/><path d="M11 20v-6"/><path d="M15 20v-6"/></svg>',
+        "battery": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 2v2"/><path d="M15 2v2"/><path d="M9 10h6"/><path d="M9 14h6"/></svg>',
+        "rd": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.5 3 5.7V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.3c1.8-1.2 3-3.3 3-5.7a7 7 0 0 0-7-7z"/></svg>',
+        "qc": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>',
+        "oem": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+        "logistics": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="15" height="10" rx="2"/><path d="M17 12h3l2 3v3h-5v-6z"/><circle cx="6.5" cy="18.5" r="1.5"/><circle cx="18.5" cy="18.5" r="1.5"/></svg>',
+    }
     feats = [
-        ("Standardized Workshops", "Complete production, testing and QC flows under one roof."),
-        ("Self-developed Battery", "Nano-magnesium-silicon cells, 50,000 units/year, extreme-temp."),
-        ("R&D Team", "In-house engineers for product and solution innovation."),
-        ("QC System", "Traceable quality, certified environmental compliance."),
-        ("OEM / ODM", "Private label, engineering customization, flexible MOQ."),
-        ("Global Logistics", "Factory-direct supply, worldwide delivery & overseas support."),
+        ("workshop", "Standardized Workshops", "Complete production, testing and QC flows under one roof."),
+        ("battery", "Self-developed Battery", "Nano-magnesium-silicon cells, 50,000 units/year, extreme-temp."),
+        ("rd", "R&D Team", "In-house engineers for product and solution innovation."),
+        ("qc", "QC System", "Traceable quality, certified environmental compliance."),
+        ("oem", "OEM / ODM", "Private label, engineering customization, flexible MOQ."),
+        ("logistics", "Global Logistics", "Factory-direct supply, worldwide delivery & overseas support."),
     ]
-    fcards = "".join(f'<div class="card"><div class="ic">◆</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for t, d in feats)
+    fcards = "".join(f'<div class="card adv"><div class="ic">{FACTORY_ICONS[k]}</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for k, t, d in feats)
     body = f'''
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-factory.webp')"></div>

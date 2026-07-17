@@ -486,7 +486,7 @@ def build_about():
 
 <section>
   <div class="wrap">
-    <div class="stats-band"><div class="wrap" style="padding:0">
+    <div class="stats-band"><div class="wrap">
       {''.join(f'<div class="b"><b>{esc(v)}</b><span>{esc(l)}</span></div>' for v,l in STATS)}
     </div></div>
   </div>
@@ -820,7 +820,7 @@ def build_factory():
 </div></section>
 
 <section><div class="wrap">
-  <div class="stats-band"><div class="wrap" style="padding:0">
+  <div class="stats-band"><div class="wrap">
     {''.join(f'<div class="b"><b>{esc(v)}</b><span>{esc(l)}</span></div>' for v,l in STATS)}
   </div></div>
 </div></section>

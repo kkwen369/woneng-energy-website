@@ -331,11 +331,27 @@ details.specs .pane{padding:0 18px 18px}
 .cert p{font-size:13.5px;margin:0}
 
 /* ---------- Stats band ---------- */
-.stats-band{background:var(--grad-deep);color:#fff;position:relative;overflow:hidden}
-.stats-band::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.10) 1px,transparent 1px);background-size:24px 24px;opacity:.55}
-.stats-band .wrap{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:54px 22px}
-.stats-band .b b{display:block;font-size:34px;font-weight:800;color:#fff;letter-spacing:-.5px}
-.stats-band .b span{font-size:14px;color:#BBD6F2}
+.stats-band{background:var(--bg);position:relative;overflow:hidden}
+.stats-band .wrap{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+  padding:54px 22px;
+}
+.stats-band .b{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:34px 20px;text-align:center;position:relative;
+  box-shadow:var(--shadow-sm);transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease);
+}
+.stats-band .b:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#dbe6f2}
+.stats-band .b::before{
+  content:"";position:absolute;top:0;left:24px;right:24px;height:4px;
+  background:var(--grad);border-radius:0 0 4px 4px;
+}
+.stats-band .b b{
+  display:block;font-size:38px;font-weight:800;letter-spacing:-1px;color:var(--blue);
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.stats-band .b span{display:block;font-size:14px;color:var(--muted);margin-top:8px;line-height:1.45}
 
 /* ---------- CTA strip ---------- */
 .cta{background:var(--grad-deep);color:#fff;border-radius:var(--radius-lg);padding:52px 48px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--shadow-lg)}
@@ -392,6 +408,7 @@ details.specs .pane{padding:0 18px 18px}
   .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
   .form-grid{grid-template-columns:1fr}
   .hero-stats{gap:24px}
+  .stats-band .wrap{grid-template-columns:1fr}
   .cta{padding:34px 22px}
   section{padding:58px 0}
   .series-head{flex-direction:column;align-items:flex-start;gap:10px}

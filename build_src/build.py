@@ -329,13 +329,19 @@ def build_home():
             <div class="more">View product →</div>
           </div></a>'''
 
+    ADV_ICONS = {
+        "factory": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20v-8l6-4 6 4v8"/><path d="M11 20v-6"/><path d="M15 20v-6"/></svg>',
+        "globe": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+        "sun": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>',
+        "wrench": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+    }
     adv = [
-        ("Factory Direct", "Own standardized plant in Zhaoqing — wholesale pricing, no middle layer."),
-        ("15+ Years Export", "Deep experience serving distributors, EPC contractors and governments."),
-        ("Africa Focused", "Heat, dust and unstable-grid ready products for Nigeria & Africa."),
-        ("OEM / ODM", "Private label, engineering customization and global logistics."),
+        ("factory", "Factory Direct", "Own standardized plant in Zhaoqing — wholesale pricing, no middle layer."),
+        ("globe", "15+ Years Export", "Deep experience serving distributors, EPC contractors and governments."),
+        ("sun", "Africa Focused", "Heat, dust and unstable-grid ready products for Nigeria & Africa."),
+        ("wrench", "OEM / ODM", "Private label, engineering customization and global logistics."),
     ]
-    adv_cards = "".join(f'<div class="card"><div class="ic">◆</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for t, d in adv)
+    adv_cards = "".join(f'<div class="card adv"><div class="ic">{ADV_ICONS[k]}</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for k, t, d in adv)
 
     stats = "".join(f'<div class="b"><b>{esc(v)}</b><span>{esc(l)}</span></div>' for v, l in STATS)
 

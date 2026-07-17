@@ -76,16 +76,21 @@ def cat_name_of(cat_id):
     return cat_id
 
 def product_card(p, bp=""):
+    chips = "".join(
+        f'<span class="pchip"><b>{esc(k)}</b> {esc(v)}</span>' for k, v in key_specs(p))
     return f'''<a class="card pcard" href="{bp}products/{p['slug']}.html">
       <div class="thumb" role="img" aria-label="{esc(p['name'])}" style="background-image:url('{bp}images/products/{os.path.basename(p['img'])}')"><span class="tag">{esc(p['cat_name'].split()[0])}</span></div>
-      <div class="body"><h3>{esc(p['name'])}</h3><div class="meta">{esc(p['models'])}</div><div class="more">View product →</div></div></a>'''
+      <div class="body"><h3>{esc(p['name'])}</h3><div class="meta">{esc(p['models'])}</div><div class="pchips">{chips}</div><div class="more">View product →</div></div></a>'''
 
 KEY_SPEC_KEYS = ["Power range", "Power", "Capacity", "Battery", "Protection", "CCT", "LED chips"]
+def _short(v, n=24):
+    v = str(v)
+    return v if len(v) <= n else v[:n-1] + "…"
 def key_specs(p):
-    chips = [("Model", p["models"])]
+    chips = [("Model", _short(p["models"], 28))]
     for k, v in p["specs"]:
         if k in KEY_SPEC_KEYS and len(chips) < 4:
-            chips.append((k, v))
+            chips.append((k, _short(v)))
         if len(chips) >= 4:
             break
     return chips
@@ -98,11 +103,11 @@ def inquiry_form(bp="", title="New Inquiry"):
       <input type="hidden" name="from_name" value="Woneng Website">
       <input type="text" name="company_website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="form-grid">
-        <div class="field"><label>Name *</label><input name="name" required></div>
-        <div class="field"><label>Company *</label><input name="company" required></div>
-        <div class="field"><label>Email *</label><input type="email" name="email" required></div>
-        <div class="field"><label>WhatsApp / Phone</label><input name="phone"></div>
-        <div class="field"><label>Product / Category</label><input id="f-product" name="product"></div>
+        <div class="field"><label>Name *</label><input name="name" required placeholder="Your full name"></div>
+        <div class="field"><label>Company *</label><input name="company" required placeholder="Your company name"></div>
+        <div class="field"><label>Email *</label><input type="email" name="email" required placeholder="you@company.com"></div>
+        <div class="field"><label>WhatsApp / Phone</label><input name="phone" placeholder="+234 … / phone number"></div>
+        <div class="field"><label>Product / Category</label><input id="f-product" name="product" placeholder="e.g. AIO Solar Street Light"></div>
         <div class="field"><label>Target Market</label><input name="market" placeholder="e.g. Nigeria"></div>
         <div class="field full"><label>Quantity &amp; Project Need</label><textarea name="message" placeholder="Tell us your quantity, project type and timeline..."></textarea></div>
         <div class="field full"><button class="btn btn-lg" type="submit">Send Inquiry</button></div>

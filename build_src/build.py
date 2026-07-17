@@ -451,8 +451,7 @@ def build_about():
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-factory.webp')"></div>
   <div class="pagebanner-inner"><div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>About Us</div>
-    <div class="eyebrow">About Woneng</div>
+    <div class="eyebrow">15 Years Export</div>
     <h1>A Trusted New-Energy Export Partner</h1>
     <p>15 years of solar manufacturing &amp; export experience, delivering reliable PV and storage solutions to global B2B clients.</p>
   </div></div>
@@ -545,8 +544,7 @@ def build_products_index():
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-products.webp')"></div>
   <div class="pagebanner-inner"><div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Products</div>
-    <div class="eyebrow">Product Center</div>
+    <div class="eyebrow">Product Series</div>
     <h1>Solar Lighting &amp; Energy Storage Products</h1>
     <p>Browse by product series — click a series to see all models, specs and inquiry pages.</p>
   </div></div>
@@ -593,12 +591,12 @@ def build_product(p):
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('../images/hero-products.webp')"></div>
   <div class="pagebanner-inner"><div class="wrap">
-    <div class="breadcrumb"><a href="../index.html">Home</a><span>/</span><a href="../products.html">Products</a><span>/</span>{esc(p['name'])}</div>
     <div class="eyebrow">{esc(p['cat_name'])}</div>
     <h1>{esc(p['name'])}</h1>
     <p>{esc(p['tagline'])}</p>
   </div></div>
 </section>
+<div class="breadcrumbs-bar"><div class="wrap"><a href="../index.html">Home</a><span>/</span><a href="../products.html">Products</a><span>/</span>{esc(p['name'])}</div></div>
 
 <section><div class="wrap">
   <div class="psplit">
@@ -690,8 +688,7 @@ def build_solutions_index():
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-solutions.webp')"></div>
   <div class="pagebanner-inner"><div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Solutions</div>
-    <div class="eyebrow">Solutions</div>
+    <div class="eyebrow">B2B Solutions</div>
     <h1>Solar &amp; Storage Solutions for Real Demand</h1>
     <p>Engineered for off-grid Africa, municipal lighting, residential and industrial scenarios.</p>
   </div></div>
@@ -712,12 +709,12 @@ def build_solution(s):
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('{simg}')"></div>
   <div class="pagebanner-inner"><div class="wrap">
-    <div class="breadcrumb"><a href="../index.html">Home</a><span>/</span><a href="../solutions.html">Solutions</a><span>/</span>{esc(s['title'])}</div>
     <div class="eyebrow">Solution</div>
     <h1>{esc(s['title'])}</h1>
     <p>{esc(s['lead'])}</p>
   </div></div>
 </section>
+<div class="breadcrumbs-bar"><div class="wrap"><a href="../index.html">Home</a><span>/</span><a href="../solutions.html">Solutions</a><span>/</span>{esc(s['title'])}</div></div>
 <section><div class="wrap">
   <div class="split">
     <div class="media" style="background-image:url('{simg}')"></div>
@@ -762,7 +759,6 @@ def build_projects():
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-projects.webp')"></div>
   <div class="pagebanner-inner"><div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Projects</div>
     <div class="eyebrow">Global References</div>
     <h1>Overseas Project Cases</h1>
     <p>Real deployments across Africa, the Middle East and Asia — proof of delivery capability.</p>
@@ -806,7 +802,6 @@ def build_factory():
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-factory.webp')"></div>
   <div class="pagebanner-inner"><div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Factory &amp; Capacity</div>
     <div class="eyebrow">Factory &amp; Capacity</div>
     <h1>Standardized Production, Stable Supply</h1>
     <p>Zhaoqing manufacturing base with full-chain solar &amp; storage production capability.</p>
@@ -861,8 +856,7 @@ def build_certs():
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-products.webp')"></div>
   <div class="pagebanner-inner"><div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Certifications</div>
-    <div class="eyebrow">Certifications</div>
+    <div class="eyebrow">Quality &amp; Compliance</div>
     <h1>Certified &amp; Compliant</h1>
     <p>Full certification set to back your procurement and import confidence.</p>
   </div></div>
@@ -892,8 +886,7 @@ def build_contact():
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-projects.webp')"></div>
   <div class="pagebanner-inner"><div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Contact</div>
-    <div class="eyebrow">Contact</div>
+    <div class="eyebrow">Get in Touch</div>
     <h1>Let's Build Your Project</h1>
     <p>Reach our international team for quotes, OEM/ODM and project support.</p>
   </div></div>

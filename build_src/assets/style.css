@@ -225,6 +225,13 @@ section{padding:78px 0}
 .pagebanner .breadcrumb a:hover{opacity:1;text-decoration:underline}
 .pagebanner .breadcrumb span{color:rgba(255,255,255,.55);margin:0 6px}
 
+/* ---------- Breadcrumbs bar (below hero) ---------- */
+.breadcrumbs-bar{background:#fff;border-bottom:1px solid var(--line);padding:13px 0}
+.breadcrumbs-bar .wrap{font-size:13px;color:var(--muted)}
+.breadcrumbs-bar a{color:var(--muted);text-decoration:none;transition:color .2s var(--ease)}
+.breadcrumbs-bar a:hover{color:var(--blue)}
+.breadcrumbs-bar span{color:#c2ccd6;margin:0 8px}
+
 /* ---------- Forms ---------- */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .field{display:flex;flex-direction:column;gap:6px}

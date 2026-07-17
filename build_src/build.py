@@ -524,8 +524,7 @@ def build_products_index():
     body_groups = ""
     for i, (slug, name, cat, items) in enumerate(groups):
         cards = "".join(product_card(p) for p in items)
-        open_attr = "open" if i < 2 else ""
-        body_groups += f'''<details class="series" {open_attr} data-cat="{esc(cat)}">
+        body_groups += f'''<details class="series" open data-cat="{esc(cat)}">
           <summary><div class="series-head">
             <h2>{esc(name)}</h2>
             <span class="series-meta">

@@ -129,16 +129,16 @@ p{margin:0 0 1em;color:var(--muted)}
   background:radial-gradient(900px 420px at 82% -12%,rgba(255,255,255,.20),transparent 60%);
 }
 .hero-inner{position:relative;z-index:2;padding:88px 0 96px}
-.hero .eyebrow{display:inline-flex;align-items:center;gap:10px;letter-spacing:3px;text-transform:uppercase;font-size:13px;font-weight:600;color:#CFE2F6;margin-bottom:16px;text-shadow:0 1px 12px rgba(4,20,40,.35)}
-.hero .eyebrow::before{content:"";width:26px;height:2px;background:#7FB2E6;border-radius:2px}
-.hero h1{color:#fff;max-width:18ch;font-size:clamp(34px,5.4vw,58px);text-shadow:0 2px 22px rgba(4,20,40,.45)}
-.hero p.lead{color:#E2EDF8;font-size:19px;max-width:60ch;margin-top:12px;text-shadow:0 1px 14px rgba(4,20,40,.38)}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:10px;letter-spacing:2.5px;text-transform:uppercase;font-size:12px;font-weight:700;color:#fff;background:rgba(0,32,66,.55);border:1px solid rgba(255,255,255,.18);padding:7px 16px;border-radius:30px;margin-bottom:16px;text-shadow:0 1px 6px rgba(0,20,45,.5);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.hero .eyebrow::before{content:"";width:20px;height:2px;background:#fff;border-radius:2px;opacity:.9}
+.hero h1{color:#fff;max-width:18ch;font-size:clamp(36px,5.6vw,60px);text-shadow:0 2px 24px rgba(0,18,40,.55)}
+.hero p.lead{color:#fff;font-size:19px;max-width:60ch;margin-top:12px;text-shadow:0 1px 14px rgba(0,18,40,.5);opacity:.95}
 .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
 .hero-stats{display:flex;gap:40px;flex-wrap:wrap;margin-top:48px}
 .hero-stats .s b{display:block;font-size:30px;color:#fff;font-weight:800;letter-spacing:-.5px}
 .hero-stats .s span{font-size:13px;color:#BBD6F2;letter-spacing:.5px}
 .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.52;mix-blend-mode:normal;z-index:0}
-.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,74,132,.60),rgba(28,120,205,.28))}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(8,40,80,.82) 0%, rgba(16,74,132,.65) 42%, rgba(28,120,205,.30) 100%)}
 
 /* ---------- Section ---------- */
 section{padding:78px 0}
@@ -214,10 +214,16 @@ section{padding:78px 0}
 .pagebanner{position:relative;color:#fff;background:var(--grad-deep);overflow:hidden}
 .pagebanner::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.12) 1px,transparent 1px);background-size:24px 24px;-webkit-mask-image:linear-gradient(90deg,#000,transparent 72%);mask-image:linear-gradient(90deg,#000,transparent 72%)}
 .pagebanner .hero-bg{opacity:.5;z-index:0}
-.pagebanner .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,74,132,.60),rgba(28,120,205,.30))}
+.pagebanner .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(8,40,80,.85) 0%, rgba(16,74,132,.68) 45%, rgba(28,120,205,.32) 100%)}
 .pagebanner-inner{position:relative;z-index:2;padding:66px 0 70px}
-.pagebanner h1{color:#fff;font-size:clamp(30px,4.8vw,48px);text-shadow:0 2px 20px rgba(4,20,40,.45)}
-.pagebanner p{color:#E2EDF8;margin:8px 0 0;max-width:62ch;text-shadow:0 1px 14px rgba(4,20,40,.38)}
+.pagebanner .eyebrow{display:inline-flex;align-items:center;gap:10px;letter-spacing:2.5px;text-transform:uppercase;font-size:12px;font-weight:700;color:#fff;background:rgba(0,32,66,.55);border:1px solid rgba(255,255,255,.18);padding:7px 16px;border-radius:30px;margin:6px 0 14px;text-shadow:0 1px 6px rgba(0,20,45,.5);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.pagebanner .eyebrow::before{content:"";width:20px;height:2px;background:#fff;border-radius:2px;opacity:.9}
+.pagebanner h1{color:#fff;font-size:clamp(32px,5vw,52px);text-shadow:0 2px 24px rgba(0,18,40,.55)}
+.pagebanner p{color:#fff;margin:8px 0 0;max-width:62ch;text-shadow:0 1px 14px rgba(0,18,40,.5);opacity:.92}
+.pagebanner .breadcrumb{display:inline-flex;align-items:center;gap:6px;background:rgba(0,32,66,.45);border:1px solid rgba(255,255,255,.14);padding:6px 14px;border-radius:30px;font-size:12px;font-weight:500;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);margin-bottom:10px}
+.pagebanner .breadcrumb a{color:#fff;opacity:.85}
+.pagebanner .breadcrumb a:hover{opacity:1;text-decoration:underline}
+.pagebanner .breadcrumb span{color:rgba(255,255,255,.55);margin:0 6px}
 
 /* ---------- Forms ---------- */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}

@@ -30,6 +30,7 @@ NAV = [
 # Categories used for product index grouping
 CATEGORIES = [
     ("Solar Lighting Series", "solar-lighting"),
+    ("Solar Decorative Lighting Series", "solar-decor"),
     ("Solar Energy Storage Series", "solar-storage"),
     ("PV Supporting Accessories", "pv-accessories"),
 ]

@@ -1,1 +1,3 @@
 _gen/
+__pycache__/
+*.pyc

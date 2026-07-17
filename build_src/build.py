@@ -2,6 +2,15 @@
 import os, datetime, json
 from data import (SITE, NAV, CATEGORIES, PRODUCTS, SOLUTIONS, PROJECTS,
                   CERTS, STATS)
+from scraped_products import SCRAPED_PRODUCTS
+
+# Extend with the 43 SKU-level pages scraped from entelechyenergy.com
+PRODUCTS = PRODUCTS + SCRAPED_PRODUCTS
+
+def featured_products():
+    """Core lines (featured=True) used on home/footer; scraped SKUs default False."""
+    return [p for p in PRODUCTS if p.get("featured", True)]
+
 
 OUT = os.path.join(os.path.dirname(__file__), "..")
 BASE_URL = SITE.get("base_url", "https://" + SITE["domain"]).rstrip("/")
@@ -119,7 +128,7 @@ def header(active="", bp=""):
 
 def footer(bp=""):
     prod_links = "".join(
-        f'<li><a href="{bp}products/{p["slug"]}.html">{esc(p["name"])}</a></li>' for p in PRODUCTS[:6])
+        f'<li><a href="{bp}products/{p["slug"]}.html">{esc(p["name"])}</a></li>' for p in featured_products()[:6])
     return f'''<footer class="site-footer">
   <div class="wrap foot-grid">
     <div class="foot-brand">
@@ -219,17 +228,7 @@ def page(title, desc, kw, body, active="", bp="", banner=None, breadcrumb=None,
 # ---------------- HOME ----------------
 def build_home():
     prod_cards = ""
-    for p in PRODUCTS:
-        prod_cards += f'''<a class="card pcard" href="products/{p['slug']}.html">
-          <div class="thumb" style="background-image:url('images/products/{p['slug'].split('-')[0]}.webp')"><span class="tag">{esc(p['cat_name'].split()[0])}</span></div>
-          <div class="body">
-            <h3>{esc(p['name'])}</h3>
-            <div class="meta">{esc(p['models'])}</div>
-            <div class="more">View product →</div>
-          </div></a>'''
-    # fix thumb image path to actual slug image
-    prod_cards = ""
-    for p in PRODUCTS:
+    for p in featured_products():
         prod_cards += f'''<a class="card pcard" href="products/{p['slug']}.html">
           <div class="thumb" role="img" aria-label="{esc(p['name'])}" style="background-image:url('images/products/{os.path.basename(p['img'])}')"><span class="tag">{esc(p['cat_name'].split()[0])}</span></div>
           <div class="body">

@@ -99,9 +99,9 @@
         .then(function (r) { return r.json(); })
         .then(function (j) {
           if (j && j.success) { showOk(form); form.reset(); }
-          else { mailtoFallback(form); }
+          else { mailtoFallback(form); showOk(form); }
         })
-        .catch(function () { mailtoFallback(form); })
+        .catch(function () { mailtoFallback(form); showOk(form); })
         .finally(function () {
           if (btn) { btn.disabled = false; btn.textContent = orig; }
           if (form.closest('.modal-back')) setTimeout(closeModal, 1400);

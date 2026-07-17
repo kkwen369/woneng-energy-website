@@ -855,8 +855,8 @@ def build_factory():
 # ---------------- CERTIFICATIONS ----------------
 def build_certs():
     cards = ""
-    for name, std, desc in CERTS:
-        cards += f'''<div class="card cert"><div class="badge">{esc(name[:4])}</div><h3>{esc(name)}</h3><div class="muted small">{esc(std)}</div><p class="small" style="margin-top:8px">{esc(desc)}</p></div>'''
+    for name, std, desc, img in CERTS:
+        cards += f'''<div class="card cert"><a class="cert-thumb" href="{esc(img)}" target="_blank" rel="noopener" aria-label="View {esc(name)} certificate"><img src="{esc(img)}" alt="{esc(name)}" loading="lazy"></a><h3>{esc(name)}</h3><div class="muted small">{esc(std)}</div><p class="small" style="margin-top:8px">{esc(desc)}</p></div>'''
     body = f'''
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-products.webp')"></div>

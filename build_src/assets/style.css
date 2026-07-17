@@ -334,9 +334,10 @@ details.specs .pane{padding:0 18px 18px}
 .modlist li:before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--blue-600)}
 
 /* ---------- Certs ---------- */
-.cert{display:flex;flex-direction:column;align-items:center;text-align:center;padding:28px 18px}
-.cert .badge{width:78px;height:78px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-weight:800;font-size:15px;margin-bottom:14px;border:2px solid #D6E6F7;transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
-.cert:hover .badge{transform:translateY(-3px);box-shadow:var(--shadow)}
+.cert{display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px 18px 28px}
+.cert .cert-thumb{width:110px;height:150px;border-radius:10px;overflow:hidden;margin-bottom:16px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-sm);transition:transform .25s var(--ease),box-shadow .25s var(--ease);display:block;text-decoration:none;cursor:pointer}
+.cert .cert-thumb img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.cert:hover .cert-thumb{transform:translateY(-4px);box-shadow:var(--shadow)}
 .cert h3{font-size:16px;margin:0 0 6px}
 .cert p{font-size:13.5px;margin:0}
 

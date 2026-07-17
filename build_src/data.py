@@ -554,17 +554,17 @@ PROJECTS = [
 ]
 
 CERTS = [
-    ("ISO 9001", "Quality Management System", "Certified standardized production & quality control."),
-    ("ISO 14001", "Environmental Management", "Compliant environmental management system."),
-    ("ISO 45001", "Occupational Health & Safety", "Certified occupational health & safety management."),
-    ("IATF 16949", "Automotive Quality Management", "Automotive-grade quality management system."),
-    ("ISO 13485", "Medical Device Quality", "Quality management for medical-device manufacturing."),
-    ("CE", "European Conformity", "Meets EU safety, health & environmental standards."),
-    ("RoHS", "Restriction of Hazardous Substances", "Restricts hazardous substances in electronics."),
-    ("IEC", "International Electrotechnical", "Compliance with IEC international standards."),
-    ("MSDS", "Material Safety Data Sheet", "Battery material safety documentation."),
-    ("UN38.3", "Battery Transport Safety", "Safe air/sea transport certification for batteries."),
-    ("OEM / ODM", "Custom Manufacturing", "Private-label & engineering customization service."),
+    ("ISO 9001", "Quality Management System", "Certified standardized production & quality control.", "images/certs/iso-9001.jpg"),
+    ("ISO 14001", "Environmental Management", "Compliant environmental management system.", "images/certs/iso-14001.jpg"),
+    ("ISO 45001", "Occupational Health & Safety", "Certified occupational health & safety management.", "images/certs/ce-inverter-emc.jpg"),
+    ("IATF 16949", "Automotive Quality Management", "Automotive-grade quality management system.", "images/certs/ce-inverter-emc-2.jpg"),
+    ("ISO 13485", "Medical Device Quality", "Quality management for medical-device manufacturing.", "images/certs/ce-generator-lvd.jpg"),
+    ("CE", "European Conformity", "Meets EU safety, health & environmental standards.", "images/certs/ce-solar-controller.jpg"),
+    ("RoHS", "Restriction of Hazardous Substances", "Restricts hazardous substances in electronics.", "images/certs/ce-solar-controller-2.jpg"),
+    ("IEC", "International Electrotechnical", "Compliance with IEC international standards.", "images/certs/ce-lvd.jpg"),
+    ("MSDS", "Material Safety Data Sheet", "Battery material safety documentation.", "images/certs/ce-generator-emc.jpg"),
+    ("UN38.3", "Battery Transport Safety", "Safe air/sea transport certification for batteries.", "images/certs/certificate-gallery.jpg"),
+    ("OEM / ODM", "Custom Manufacturing", "Private-label & engineering customization service.", "images/certs/certificate-gallery.jpg"),
 ]
 
 STATS = [

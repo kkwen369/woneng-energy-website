@@ -95,17 +95,32 @@
         if (btn) { btn.disabled = false; btn.textContent = orig; }
         return;
       }
-      fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
-        .then(function (r) { return r.json(); })
-        .then(function (j) {
-          if (j && j.success) { showOk(form); form.reset(); }
-          else { mailtoFallback(form); showOk(form); }
-        })
-        .catch(function () { mailtoFallback(form); showOk(form); })
-        .finally(function () {
-          if (btn) { btn.disabled = false; btn.textContent = orig; }
-          if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+      // Try Supabase first (auto-save inquiry to database), fallback to Web3Forms
+      var useSupabase = window.WonengSupabase && window.WonengSupabase.isConfigured();
+
+      function web3Fallback() {
+        fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            if (j && j.success) { showOk(form); form.reset(); }
+            else { mailtoFallback(form); showOk(form); }
+          })
+          .catch(function () { mailtoFallback(form); showOk(form); })
+          .finally(function () {
+            if (btn) { btn.disabled = false; btn.textContent = orig; }
+            if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+          });
+      }
+
+      if (useSupabase) {
+        window.WonengSupabase.submitInquiry(data, form).then(function (ok) {
+          if (ok) {
+            showOk(form); form.reset();
+            if (btn) { btn.disabled = false; btn.textContent = orig; }
+            if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+          } else { web3Fallback(); }
         });
+      } else { web3Fallback(); }
     });
   });
 

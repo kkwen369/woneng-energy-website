@@ -4,16 +4,18 @@
 SITE = {
     "brand": "Woneng",
     "brand_full": "Zhaoqing Woneng High-Tech Co., Ltd.",
-    "domain": "entelechyenergy.com",
+    "domain": "woneng-energy.com",
     "base_url": "https://kkwen369.github.io/woneng-energy-website",
     "tagline": "Solar Lighting & Energy Storage — Factory Direct for Global B2B",
-    "email": "sales@entelechyenergy.com",
-    "whatsapp": "+8613920000000",
-    "phone": "+86 139 2000 0000",
+    "email": "sales@woneng-energy.com",
+    "whatsapp": "+8613920000000",   # TODO: replace with real WhatsApp number
+    "phone": "+86 139 2000 0000",   # TODO: replace with real phone number
     "address": "Jinsheng Industrial Park, Jinli Town, Gaoyao District, Zhaoqing City, Guangdong, China",
     "established": "2023",
-    "founded_note": "15 years of solar manufacturing & export experience",
+    "founded_note": "Team with 15+ years of solar industry experience — company established 2023",
     "fb": "",
+    "linkedin": "https://www.linkedin.com/company/woneng-energy",   # TODO: create LinkedIn page
+    "youtube": "",   # TODO: create YouTube channel
 }
 
 NAV = [
@@ -24,6 +26,7 @@ NAV = [
     ("Projects", "projects.html"),
     ("Factory", "factory.html"),
     ("Certifications", "certifications.html"),
+    ("News", "news.html"),
     ("Contact", "contact.html"),
 ]
 
@@ -556,19 +559,18 @@ PROJECTS = [
 CERTS = [
     ("ISO 9001", "Quality Management System", "Certified standardized production & quality control.", "images/certs/iso-9001.jpg"),
     ("ISO 14001", "Environmental Management", "Compliant environmental management system.", "images/certs/iso-14001.jpg"),
-    ("ISO 45001", "Occupational Health & Safety", "Certified occupational health & safety management.", "images/certs/ce-inverter-emc.jpg"),
-    ("IATF 16949", "Automotive Quality Management", "Automotive-grade quality management system.", "images/certs/ce-inverter-emc-2.jpg"),
-    ("ISO 13485", "Medical Device Quality", "Quality management for medical-device manufacturing.", "images/certs/ce-generator-lvd.jpg"),
-    ("CE", "European Conformity", "Meets EU safety, health & environmental standards.", "images/certs/ce-solar-controller.jpg"),
-    ("RoHS", "Restriction of Hazardous Substances", "Restricts hazardous substances in electronics.", "images/certs/ce-solar-controller-2.jpg"),
-    ("IEC", "International Electrotechnical", "Compliance with IEC international standards.", "images/certs/ce-lvd.jpg"),
-    ("MSDS", "Material Safety Data Sheet", "Battery material safety documentation.", "images/certs/ce-generator-emc.jpg"),
-    ("UN38.3", "Battery Transport Safety", "Safe air/sea transport certification for batteries.", "images/certs/certificate-gallery.jpg"),
-    ("OEM / ODM", "Custom Manufacturing", "Private-label & engineering customization service.", "images/certs/certificate-gallery.jpg"),
+    ("CE", "European Conformity — Inverter EMC", "Meets EU electromagnetic compatibility standards for solar inverters.", "images/certs/ce-inverter-emc.jpg"),
+    ("CE", "European Conformity — Inverter EMC", "Additional EU EMC compliance certification for solar inverters.", "images/certs/ce-inverter-emc-2.jpg"),
+    ("CE", "European Conformity — Generator LVD", "Meets EU low voltage directive for solar power generators.", "images/certs/ce-generator-lvd.jpg"),
+    ("CE", "European Conformity — Solar Controller", "EU conformity for solar charge controller products.", "images/certs/ce-solar-controller.jpg"),
+    ("CE", "European Conformity — Solar Controller", "Additional EU conformity for solar charge controllers.", "images/certs/ce-solar-controller-2.jpg"),
+    ("CE", "European Conformity — LVD", "EU low voltage directive compliance.", "images/certs/ce-lvd.jpg"),
+    ("CE", "European Conformity — Generator EMC", "EU electromagnetic compatibility for solar generators.", "images/certs/ce-generator-emc.jpg"),
+    ("OEM / ODM", "Custom Manufacturing Service", "Private-label & engineering customization service available.", "images/certs/certificate-gallery.jpg"),
 ]
 
 STATS = [
-    ("15+", "Years solar manufacturing & export"),
+    ("15+", "Years of team industry experience"),
     ("50,000", "Batteries produced annually"),
     ("60+", "Countries & regions served"),
     ("3yr", "Full-machine warranty"),

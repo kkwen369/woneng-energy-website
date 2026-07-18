@@ -1,4 +1,4 @@
-/* Woneng Energy — site interactions */
+/* Woneng Energy — site interactions with Supabase integration */
 (function () {
   'use strict';
 
@@ -28,7 +28,7 @@
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 
-  // Accordions
+  // Accordions (FAQ)
   document.querySelectorAll('.acc button').forEach(function (b) {
     b.addEventListener('click', function () {
       b.parentElement.classList.toggle('open');
@@ -62,7 +62,7 @@
   if (modal) modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
 
-  // Forms — Web3Forms submit with validation + mailto fallback (no backend needed)
+  // Forms — Supabase first, then Web3Forms, then mailto fallback
   function showOk(form) {
     var ok = form.querySelector('.form-ok');
     if (ok) { ok.classList.add('show'); setTimeout(function () { ok.classList.remove('show'); }, 6000); }
@@ -77,7 +77,7 @@
                 'Target Market: ' + (d.get('market') || '') + '\n' +
                 'Need: ' + (d.get('message') || '');
     var subj = 'Woneng Inquiry — ' + (d.get('product') || 'Website');
-    window.location.href = 'mailto:sales@entelechyenergy.com?subject=' +
+    window.location.href = 'mailto:sales@woneng-energy.com?subject=' +
       encodeURIComponent(subj) + '&body=' + encodeURIComponent(lines);
   }
   document.querySelectorAll('form[data-web3]').forEach(function (form) {
@@ -88,24 +88,39 @@
       var orig = btn ? btn.textContent : '';
       if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
       var data = new FormData(form);
-      // Honeypot — if filled, treat as bot and silently "succeed" without sending.
+      // Honeypot check
       if (data.get('company_website')) {
         showOk(form); form.reset();
         if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
         if (btn) { btn.disabled = false; btn.textContent = orig; }
         return;
       }
-      fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
-        .then(function (r) { return r.json(); })
-        .then(function (j) {
-          if (j && j.success) { showOk(form); form.reset(); }
-          else { mailtoFallback(form); showOk(form); }
-        })
-        .catch(function () { mailtoFallback(form); showOk(form); })
-        .finally(function () {
-          if (btn) { btn.disabled = false; btn.textContent = orig; }
-          if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+      // Try Supabase first
+      var useSupabase = window.WonengSupabase && window.WonengSupabase.isConfigured();
+
+      function web3Fallback() {
+        fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            if (j && j.success) { showOk(form); form.reset(); }
+            else { mailtoFallback(form); showOk(form); }
+          })
+          .catch(function () { mailtoFallback(form); showOk(form); })
+          .finally(function () {
+            if (btn) { btn.disabled = false; btn.textContent = orig; }
+            if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+          });
+      }
+
+      if (useSupabase) {
+        window.WonengSupabase.submitInquiry(data, form).then(function (ok) {
+          if (ok) {
+            showOk(form); form.reset();
+            if (btn) { btn.disabled = false; btn.textContent = orig; }
+            if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+          } else { web3Fallback(); }
         });
+      } else { web3Fallback(); }
     });
   });
 

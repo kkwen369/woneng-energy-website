@@ -1,3 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /build_src/
+Disallow: /*.py$
+Disallow: /后台系统上线指南.md
+
 Sitemap: https://kkwen369.github.io/woneng-energy-website/sitemap.xml

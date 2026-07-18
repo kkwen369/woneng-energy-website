@@ -437,4 +437,53 @@ details.specs .pane{padding:0 18px 18px}
   section{padding:58px 0}
   .series-head{flex-direction:column;align-items:flex-start;gap:10px}
   .series-meta{width:100%;justify-content:flex-start}
+  .trade-items{flex-direction:column;gap:12px}
+  .foot-grid{grid-template-columns:1fr}
 }
+
+/* ---------- Skip link (accessibility) ---------- */
+.skip-link{
+  position:absolute;top:-100px;left:8px;background:var(--blue);color:#fff;
+  padding:8px 16px;border-radius:8px;font-weight:600;z-index:100;
+  transition:top .2s var(--ease);
+}
+.skip-link:focus{top:8px}
+
+/* ---------- Cookie consent banner ---------- */
+.cookie-banner{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:90;
+  background:#1B2A40;color:#D7E6F6;padding:18px 0;
+  box-shadow:0 -8px 24px rgba(12,30,55,.18);
+}
+.cookie-banner .wrap{display:flex;align-items:center;gap:18px;justify-content:space-between}
+.cookie-banner p{margin:0;font-size:14px;max-width:70ch;line-height:1.5}
+.cookie-banner a{color:#fff;text-decoration:underline}
+.cookie-banner .btn{flex:none}
+
+/* ---------- Trade info strip ---------- */
+.trade-strip{
+  background:var(--blue-soft);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;margin:0 auto;
+}
+.trade-items{
+  display:flex;flex-wrap:wrap;gap:24px;justify-content:center;
+  padding:20px 26px;
+}
+.trade-item{
+  font-size:14px;color:var(--ink);
+}
+.trade-item strong{color:var(--blue)}
+
+/* ---------- Trade box (product detail) ---------- */
+.trade-box{
+  background:var(--blue-soft);border:1px solid var(--line);
+  border-radius:var(--radius);padding:20px 22px;
+}
+.trade-box h3{font-size:16px;color:var(--blue-dark);margin:0 0 14px;font-weight:700}
+.trade-box .spectable{margin-top:0}
+
+/* ---------- FAQ section ---------- */
+.faq-list{max-width:800px;margin:0 auto}
+.faq-list .acc{margin-bottom:10px}
+.faq-list .acc button{padding:18px 20px;font-size:16px}
+.faq-list .acc .pane{font-size:15px;line-height:1.7;color:var(--muted)}

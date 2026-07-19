@@ -2,7 +2,7 @@
 """Woneng Energy — site builder with SEO + UX improvements (2026-07 rebuild)."""
 import os, datetime, json
 from data import (SITE, NAV, CATEGORIES, PRODUCTS, SOLUTIONS, PROJECTS,
-                  CERTS, STATS)
+                  LOCAL_SERVICES, CERTS, STATS)
 from scraped_products import SCRAPED_PRODUCTS
 
 PRODUCTS = PRODUCTS + SCRAPED_PRODUCTS
@@ -888,6 +888,43 @@ def build_projects():
             <p>{esc(p['desc'])}</p>
             <div class="chips">{chips}</div>
           </div></div>'''
+
+    # --- OUR LOCAL SERVICES map section ---
+    left_col = ["Cairo", "Lagos", "Abuja", "Douala", "Kinshasa"]
+    right_col = ["Karachi", "Mombasa", "Dar es Salaam", "Kampala", "Johannesburg"]
+    by_city = {ls["city"]: ls for ls in LOCAL_SERVICES}
+
+    def loc_card(ls):
+        return f'''<div class="loc-card">
+            <span class="flag" aria-hidden="true">{esc(ls['flag'])}</span>
+            <h3>{esc(ls['city'])}, {esc(ls['country'])}</h3>
+            <p>{esc(ls['address'])}</p>
+          </div>'''
+
+    left_cards = "".join(loc_card(by_city[c]) for c in left_col if c in by_city)
+    right_cards = "".join(loc_card(by_city[c]) for c in right_col if c in by_city)
+
+    dots = "".join(f'<span class="map-dot" style="left:{ls["x"]}%;top:{ls["y"]}%" aria-hidden="true"></span>' for ls in LOCAL_SERVICES)
+
+    local_services = f'''<section class="local-services" aria-label="Local services and warehouses">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow">10 overseas warehouses</div>
+      <h2>OUR LOCAL SERVICES</h2>
+      <p>Local offices and warehouses close to your market — faster delivery and local support.</p>
+    </div>
+    <div class="map-stage">
+      <img class="world-map" src="images/world-map-dark.svg" alt="" aria-hidden="true">
+      <div class="map-dots">{dots}</div>
+      <div class="map-overlay">
+        <div class="loc-col">{left_cards}</div>
+        <div class="loc-col">{right_cards}</div>
+      </div>
+    </div>
+    <div class="map-mobile-list" aria-hidden="true">{''.join(f'<div class="map-mobile-item"><span class="flag">{esc(ls["flag"])}</span><div><b>{esc(ls["city"])}, {esc(ls["country"])}</b><p>{esc(ls["address"])}</p></div></div>' for ls in LOCAL_SERVICES)}</div>
+  </div>
+</section>'''
+
     body = f'''
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-projects.webp')"></div>
@@ -897,6 +934,7 @@ def build_projects():
     <p>Real deployments across Africa, the Middle East and Asia — proof of delivery capability.</p>
   </div></div>
 </section>
+{local_services}
 <section><div class="wrap">{cards}
   <div class="cta" style="margin-top:14px">
     <h2>Your Project Could Be Next</h2>

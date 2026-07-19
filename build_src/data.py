@@ -556,6 +556,70 @@ PROJECTS = [
     },
 ]
 
+# 10 overseas warehouses / local service points for the "OUR LOCAL SERVICES" map section
+LOCAL_SERVICES = [
+    {
+        "city": "Cairo", "country": "Egypt", "country_code": "EG",
+        "flag": "🇪🇬", "x": 54, "y": 32,
+        "address": "Middle East Cairo Office, Factory Badr City, Kindustrial Zone 1, Block 74, Cairo, Egypt",
+        "phone": "+20 10 0000 0000",
+    },
+    {
+        "city": "Lagos", "country": "Nigeria", "country_code": "NG",
+        "flag": "🇳🇬", "x": 49, "y": 48,
+        "address": "Awoniyi Elemo St., Apao Estate, Airport Road, Lagos State, Nigeria",
+        "phone": "+234 800 000 0000",
+    },
+    {
+        "city": "Abuja", "country": "Nigeria", "country_code": "NG",
+        "flag": "🇳🇬", "x": 50, "y": 45,
+        "address": "Ukwe St, Abuja, Nigeria",
+        "phone": "+234 800 000 0000",
+    },
+    {
+        "city": "Mombasa", "country": "Kenya", "country_code": "KE",
+        "flag": "🇰🇪", "x": 55, "y": 55,
+        "address": "KIA airport, the entrance at auto express",
+        "phone": "+254 700 000 000",
+    },
+    {
+        "city": "Dar es Salaam", "country": "Tanzania", "country_code": "TZ",
+        "flag": "🇹🇿", "x": 55, "y": 57,
+        "address": "Mandela road, Ilala District, Dar es Salaam",
+        "phone": "+255 700 000 000",
+    },
+    {
+        "city": "Johannesburg", "country": "South Africa", "country_code": "ZA",
+        "flag": "🇿🇦", "x": 54, "y": 72,
+        "address": "Wessel Rd, Oriental City, Rivonia, Sandton, Johannesburg",
+        "phone": "+27 10 000 0000",
+    },
+    {
+        "city": "Douala", "country": "Cameroon", "country_code": "CM",
+        "flag": "🇨🇲", "x": 50, "y": 50,
+        "address": "Magasin ASSA, vers eco marché (marché sandaga) à coté de 3T Cameroon, Douala",
+        "phone": "+237 600 00 00 00",
+    },
+    {
+        "city": "Kinshasa", "country": "DR Congo", "country_code": "CD",
+        "flag": "🇨🇩", "x": 51, "y": 55,
+        "address": "Av progres numéro 4031, commune de Bandalungwa, ville de Kinshasa, DR Congo",
+        "phone": "+243 800 000 000",
+    },
+    {
+        "city": "Kampala", "country": "Uganda", "country_code": "UG",
+        "flag": "🇺🇬", "x": 55, "y": 53,
+        "address": "Plot 58, Kisaasi Road, Ntinda, Kampala, Uganda",
+        "phone": "+256 700 000 000",
+    },
+    {
+        "city": "Karachi", "country": "Pakistan", "country_code": "PK",
+        "flag": "🇵🇰", "x": 62, "y": 40,
+        "address": "Shahrah-e-Faisal Road, Harisun Suites, Karachi, Sindh 75400",
+        "phone": "+92 300 0000000",
+    },
+]
+
 CERTS = [
     ("ISO 9001", "Quality Management System", "Certified standardized production & quality control.", "images/certs/iso-9001.jpg"),
     ("ISO 14001", "Environmental Management", "Compliant environmental management system.", "images/certs/iso-14001.jpg"),

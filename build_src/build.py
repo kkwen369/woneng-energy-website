@@ -2,7 +2,7 @@
 """Woneng Energy — site builder with SEO + UX improvements (2026-07 rebuild)."""
 import os, datetime, json
 from data import (SITE, NAV, CATEGORIES, PRODUCTS, SOLUTIONS, PROJECTS,
-                  LOCAL_SERVICES, CERTS, STATS)
+                  CERTS, STATS)
 from scraped_products import SCRAPED_PRODUCTS
 
 PRODUCTS = PRODUCTS + SCRAPED_PRODUCTS
@@ -102,20 +102,24 @@ FAQ_ITEMS = [
     ("Can I get a sample before bulk order?", "Yes, we welcome sample orders for quality evaluation. Sample pricing is available with fast delivery via air freight. Sample costs are refundable against your first bulk order."),
 ]
 
-def inquiry_form(bp="", title="New Inquiry"):
+def inquiry_form(bp="", title="New Inquiry", product="", suffix=""):
+    product_value = esc(product) if product else ""
+    product_attr = f' value="{product_value}"' if product_value else ""
+    s = esc(suffix) if suffix else ""
+    id_pre = f"f-{s}-" if s else "f-"
     return f'''<form class="inquiry-form" action="{FORM_ENDPOINT}" method="POST" data-web3>
       <input type="hidden" name="access_key" value="{FORM_KEY}">
       <input type="hidden" name="subject" value="Woneng Inquiry — {esc(title)}">
       <input type="hidden" name="from_name" value="Woneng Website">
       <input type="text" name="company_website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
       <div class="form-grid">
-        <div class="field"><label for="f-name">Name *</label><input id="f-name" name="name" required placeholder="Your full name"></div>
-        <div class="field"><label for="f-company">Company *</label><input id="f-company" name="company" required placeholder="Your company name"></div>
-        <div class="field"><label for="f-email">Email *</label><input id="f-email" type="email" name="email" required placeholder="you@company.com"></div>
-        <div class="field"><label for="f-phone">WhatsApp / Phone</label><input id="f-phone" name="phone" placeholder="+234 … / phone number"></div>
-        <div class="field"><label for="f-product">Product / Category</label><input id="f-product" name="product" placeholder="e.g. AIO Solar Street Light"></div>
-        <div class="field"><label for="f-market">Target Market</label><input id="f-market" name="market" placeholder="e.g. Nigeria"></div>
-        <div class="field full"><label for="f-msg">Quantity &amp; Project Need</label><textarea id="f-msg" name="message" placeholder="Tell us your quantity, project type and timeline..."></textarea></div>
+        <div class="field"><label for="{id_pre}name">Name *</label><input id="{id_pre}name" name="name" required placeholder="Your full name"></div>
+        <div class="field"><label for="{id_pre}company">Company *</label><input id="{id_pre}company" name="company" required placeholder="Your company name"></div>
+        <div class="field"><label for="{id_pre}email">Email *</label><input id="{id_pre}email" type="email" name="email" required placeholder="you@company.com"></div>
+        <div class="field"><label for="{id_pre}phone">WhatsApp / Phone</label><input id="{id_pre}phone" name="phone" placeholder="+234 … / phone number"></div>
+        <div class="field"><label for="{id_pre}product">Product / Category</label><input id="{id_pre}product" name="product" placeholder="e.g. AIO Solar Street Light"{product_attr}></div>
+        <div class="field"><label for="{id_pre}market">Target Market</label><input id="{id_pre}market" name="market" placeholder="e.g. Nigeria"></div>
+        <div class="field full"><label for="{id_pre}msg">Quantity &amp; Project Need</label><textarea id="{id_pre}msg" name="message" placeholder="Tell us your quantity, project type and timeline..."></textarea></div>
         <div class="field full"><button class="btn btn-lg" type="submit">Send Inquiry</button></div>
       </div>
       <div class="form-ok">✓ Thank you! Our international team will reply within 24 hours.</div>
@@ -339,7 +343,7 @@ def inquiry_modal(bp=""):
   <div class="modal">
     <div class="modal-head"><h3 id="inquiryModalTitle">Request a Quote</h3><button class="modal-close" aria-label="Close modal">×</button></div>
     <div class="modal-body">
-      {inquiry_form(bp, "Request a Quote")}
+      {inquiry_form(bp, "Request a Quote", suffix="modal")}
     </div>
   </div>
 </div>'''
@@ -757,11 +761,16 @@ def build_product(p):
 
 {('<section class="section-alt"><div class="wrap"><div class="section-head"><div class="eyebrow">Related</div><h2>From the Same Series</h2></div><div class="grid grid-3">'+rel_cards+'</div></div></section>') if rel_cards else ''}
 
-<section class="section-alt"><div class="wrap"><div class="cta">
-  <h2>Quote {esc(p['name'])} for Your Project</h2>
-  <p>Tell us quantity, market and timeline — factory-direct pricing in 24h.</p>
-  <div class="hero-actions"><a class="btn btn-lg btn-light" href="#" data-inquiry="{esc(p['name'])}" data-inquiry-title="Quote: {esc(p['name'])}">Request Quote</a></div>
-</div></div></section>
+<section class="section-alt"><div class="wrap">
+  <div class="inquiry-card">
+    <div class="section-head center" style="margin-bottom:24px">
+      <div class="eyebrow">Get a Quote</div>
+      <h2>Send an Inquiry</h2>
+      <p>Tell us quantity, market and timeline — factory-direct pricing in 24h.</p>
+    </div>
+    {inquiry_form(bp="../", title=f"Quote: {p['name']}", product=p['name'], suffix="page")}
+  </div>
+</div></section>
 '''
     p_url = f"products/{slug}.html"
     product_ld = {
@@ -889,42 +898,6 @@ def build_projects():
             <div class="chips">{chips}</div>
           </div></div>'''
 
-    # --- OUR LOCAL SERVICES map section ---
-    left_col = ["Cairo", "Lagos", "Abuja", "Douala", "Kinshasa"]
-    right_col = ["Karachi", "Mombasa", "Dar es Salaam", "Kampala", "Johannesburg"]
-    by_city = {ls["city"]: ls for ls in LOCAL_SERVICES}
-
-    def loc_card(ls):
-        return f'''<div class="loc-card">
-            <span class="flag" aria-hidden="true">{esc(ls['flag'])}</span>
-            <h3>{esc(ls['city'])}, {esc(ls['country'])}</h3>
-            <p>{esc(ls['address'])}</p>
-          </div>'''
-
-    left_cards = "".join(loc_card(by_city[c]) for c in left_col if c in by_city)
-    right_cards = "".join(loc_card(by_city[c]) for c in right_col if c in by_city)
-
-    dots = "".join(f'<span class="map-dot" style="left:{ls["x"]}%;top:{ls["y"]}%" aria-hidden="true"></span>' for ls in LOCAL_SERVICES)
-
-    local_services = f'''<section class="local-services" aria-label="Local services and warehouses">
-  <div class="wrap">
-    <div class="section-head center">
-      <div class="eyebrow">10 overseas warehouses</div>
-      <h2>OUR LOCAL SERVICES</h2>
-      <p>Local offices and warehouses close to your market — faster delivery and local support.</p>
-    </div>
-    <div class="map-stage">
-      <img class="world-map" src="images/world-map-dark.svg" alt="" aria-hidden="true">
-      <div class="map-dots">{dots}</div>
-      <div class="map-overlay">
-        <div class="loc-col">{left_cards}</div>
-        <div class="loc-col">{right_cards}</div>
-      </div>
-    </div>
-    <div class="map-mobile-list" aria-hidden="true">{''.join(f'<div class="map-mobile-item"><span class="flag">{esc(ls["flag"])}</span><div><b>{esc(ls["city"])}, {esc(ls["country"])}</b><p>{esc(ls["address"])}</p></div></div>' for ls in LOCAL_SERVICES)}</div>
-  </div>
-</section>'''
-
     body = f'''
 <section class="pagebanner">
   <div class="hero-bg" style="background-image:url('images/hero-projects.webp')"></div>
@@ -934,7 +907,6 @@ def build_projects():
     <p>Real deployments across Africa, the Middle East and Asia — proof of delivery capability.</p>
   </div></div>
 </section>
-{local_services}
 <section><div class="wrap">{cards}
   <div class="cta" style="margin-top:14px">
     <h2>Your Project Could Be Next</h2>
@@ -1082,7 +1054,7 @@ def build_contact():
     </div>
     <div class="card">
       <h3>Send an Inquiry</h3>
-      {inquiry_form(bp="", title="Website Contact")}
+      {inquiry_form(bp="", title="Website Contact", suffix="contact")}
     </div>
   </div>
 </div></section>

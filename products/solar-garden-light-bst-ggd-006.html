@@ -157,33 +157,42 @@
     </form>
   </div>
 </div></section>
-</main><div class="inquiry-float">
-  <a class="fab inquiry" href="#" data-inquiry="Request a Quote" data-inquiry-title="Request a Bulk Quote"><span class="lbl">Get a Quote</span>✉</a>
-  <a class="fab whatsapp" href="https://wa.me/8613920000000" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><span class="lbl">WhatsApp</span><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.99 6.45 17.5 2 12.04 2zm5.8 14.14c-.25.69-1.45 1.32-1.99 1.36-.53.04-1.07.24-3.6-.75-2.99-1.14-4.9-4.05-5.05-4.24-.15-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.25.59.84 2.03.91 2.18.07.15.12.32.02.52-.1.19-.15.31-.29.48-.15.18-.31.39-.45.53-.15.15-.3.31-.13.6.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.41.29.14.46.12.63-.07.18-.19.74-.86.94-1.16.2-.3.4-.25.67-.15.28.1 1.77.84 2.07 1 .3.16.5.24.57.37.08.14.08.79-.17 1.48z"/></svg></a>
-</div><div class="modal-back" id="inquiryModal">
-  <div class="modal">
-    <div class="modal-head"><h3 id="inquiryModalTitle">Request a Quote</h3><button class="modal-close" aria-label="Close modal">×</button></div>
-    <div class="modal-body">
-      <form class="inquiry-form" action="https://api.web3forms.com/form" method="POST" data-web3>
+</main><div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+<div class="inquiry-drawer" id="inquiryDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div>
+      <div class="drawer-title">Click Here To Get Free Quote</div>
+      <div class="drawer-sub">Factory-direct pricing in 24 hours</div>
+    </div>
+    <button class="drawer-close" aria-label="Close quote panel">×</button>
+  </div>
+  <div class="drawer-body">
+    <form class="inquiry-form" action="https://api.web3forms.com/form" method="POST" data-web3>
       <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
       <input type="hidden" name="subject" value="Woneng Inquiry — Request a Quote">
       <input type="hidden" name="from_name" value="Woneng Website">
       <input type="text" name="company_website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
       <div class="form-grid">
-        <div class="field"><label for="f-modal-name">Name *</label><input id="f-modal-name" name="name" required placeholder="Your full name"></div>
-        <div class="field"><label for="f-modal-company">Company *</label><input id="f-modal-company" name="company" required placeholder="Your company name"></div>
-        <div class="field"><label for="f-modal-email">Email *</label><input id="f-modal-email" type="email" name="email" required placeholder="you@company.com"></div>
-        <div class="field"><label for="f-modal-phone">WhatsApp / Phone</label><input id="f-modal-phone" name="phone" placeholder="+234 … / phone number"></div>
-        <div class="field"><label for="f-modal-product">Product / Category</label><input id="f-modal-product" name="product" placeholder="e.g. AIO Solar Street Light"></div>
-        <div class="field"><label for="f-modal-market">Target Market</label><input id="f-modal-market" name="market" placeholder="e.g. Nigeria"></div>
-        <div class="field full"><label for="f-modal-msg">Quantity &amp; Project Need</label><textarea id="f-modal-msg" name="message" placeholder="Tell us your quantity, project type and timeline..."></textarea></div>
+        <div class="field"><label for="f-drawer-name">Name *</label><input id="f-drawer-name" name="name" required placeholder="Your full name"></div>
+        <div class="field"><label for="f-drawer-company">Company *</label><input id="f-drawer-company" name="company" required placeholder="Your company name"></div>
+        <div class="field"><label for="f-drawer-email">Email *</label><input id="f-drawer-email" type="email" name="email" required placeholder="you@company.com"></div>
+        <div class="field"><label for="f-drawer-phone">WhatsApp / Phone</label><input id="f-drawer-phone" name="phone" placeholder="+234 … / phone number"></div>
+        <div class="field"><label for="f-drawer-product">Product / Category</label><input id="f-drawer-product" name="product" placeholder="e.g. AIO Solar Street Light"></div>
+        <div class="field"><label for="f-drawer-market">Target Market</label><input id="f-drawer-market" name="market" placeholder="e.g. Nigeria"></div>
+        <div class="field full"><label for="f-drawer-msg">Quantity &amp; Project Need</label><textarea id="f-drawer-msg" name="message" placeholder="Tell us your quantity, project type and timeline..."></textarea></div>
         <div class="field full"><button class="btn btn-lg" type="submit">Send Inquiry</button></div>
       </div>
       <div class="form-ok">✓ Thank you! Our international team will reply within 24 hours.</div>
     </form>
-    </div>
   </div>
-</div><div class="cookie-banner" id="cookieBanner">
+</div>
+<a class="inquiry-tab" href="#" id="inquiryTab" aria-label="Open quote form">
+  <span class="tab-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+  <span class="tab-text">Get Free Quote</span>
+</a>
+<a class="whatsapp-tab" href="https://wa.me/8613920000000" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.99 6.45 17.5 2 12.04 2zm5.8 14.14c-.25.69-1.45 1.32-1.99 1.36-.53.04-1.07.24-3.6-.75-2.99-1.14-4.9-4.05-5.05-4.24-.15-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.25.59.84 2.03.91 2.18.07.15.12.32.02.52-.1.19-.15.31-.29.48-.15.18-.31.39-.45.53-.15.15-.3.31-.13.6.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.41.29.14.46.12.63-.07.18-.19.74-.86.94-1.16.2-.3.4-.25.67-.15.28.1 1.77.84 2.07 1 .3.16.5.24.57.37.08.14.08.79-.17 1.48z"/></svg>
+</a><div class="cookie-banner" id="cookieBanner">
   <div class="wrap">
     <p>We use cookies to improve your experience and analyze site traffic. By continuing, you agree to our <a href="privacy.html">Privacy Policy</a>.</p>
     <button class="btn btn-sm" onclick="document.getElementById('cookieBanner').style.display='none';localStorage.setItem('cookieOk','1')">Accept</button>

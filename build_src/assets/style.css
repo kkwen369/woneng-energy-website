@@ -257,27 +257,76 @@ section{padding:78px 0}
 .inquiry-card .section-head h2{font-size:clamp(24px,3vw,30px)}
 .inquiry-card .section-head p{color:var(--muted)}
 
-/* inquiry float */
-.inquiry-float{position:fixed;right:22px;bottom:22px;z-index:60;display:flex;flex-direction:column;gap:12px;align-items:flex-end}
-.fab{
-  width:54px;height:54px;border-radius:50%;display:grid;place-items:center;
-  box-shadow:var(--glow);cursor:pointer;border:none;color:#fff;font-size:22px;transition:transform .2s var(--ease), box-shadow .2s var(--ease);position:relative;
+/* inquiry drawer */
+.drawer-overlay{
+  position:fixed;inset:0;background:rgba(16,32,52,.55);z-index:80;
+  display:none;backdrop-filter:blur(3px);
 }
-.fab.whatsapp{background:linear-gradient(135deg,#1EBE5A,#25D366);box-shadow:0 10px 26px rgba(37,211,102,.42)}
-.fab.inquiry{background:var(--grad)}
-.fab.inquire{background:var(--grad-deep)}
-.fab:hover{transform:translateY(-3px)}
-.fab .lbl{position:absolute;right:64px;background:#fff;color:var(--ink);font-size:13px;font-weight:600;padding:7px 12px;border-radius:9px;box-shadow:var(--shadow);white-space:nowrap;opacity:0;pointer-events:none;transform:translateX(8px);transition:.18s var(--ease)}
-.fab:hover .lbl{opacity:1;transform:translateX(0)}
+.drawer-overlay.show{display:block}
+.inquiry-drawer{
+  position:fixed;top:0;right:0;height:100%;width:min(420px,90vw);
+  background:#fff;z-index:90;
+  transform:translateX(110%);transition:transform .35s var(--ease);
+  box-shadow:-10px 0 40px rgba(12,30,55,.25);
+  display:flex;flex-direction:column;
+}
+.inquiry-drawer.show{transform:translateX(0)}
+.drawer-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  padding:20px 22px;border-bottom:3px solid var(--blue);background:#fff;
+}
+.drawer-title{font-size:18px;font-weight:700;color:var(--ink);line-height:1.3}
+.drawer-sub{font-size:13px;color:var(--muted);margin-top:4px}
+.drawer-close{background:none;border:none;font-size:28px;line-height:1;cursor:pointer;color:var(--muted);padding:0;width:32px;height:32px;display:grid;place-items:center;border-radius:8px;transition:.15s}
+.drawer-close:hover{background:var(--bg);color:var(--ink)}
+.drawer-body{padding:22px;overflow-y:auto;flex:1}
+.drawer-body .inquiry-form{box-shadow:none;padding:0;border:none}
 
-/* modal */
-.modal-back{position:fixed;inset:0;background:rgba(16,32,52,.55);z-index:80;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)}
-.modal-back.show{display:flex}
-.modal{background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 30px 70px rgba(12,30,55,.30);border:1px solid rgba(255,255,255,.6)}
-.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line)}
-.modal-head h3{margin:0}
-.modal-close{background:none;border:none;font-size:26px;line-height:1;cursor:pointer;color:var(--muted)}
-.modal-body{padding:22px 24px}
+/* Right-side inquiry tab */
+.inquiry-tab{
+  position:fixed;right:0;top:50%;transform:translateY(-50%) translateX(0);
+  z-index:70;background:var(--grad);color:#fff;
+  display:flex;align-items:center;gap:8px;
+  padding:12px 14px 12px 16px;border-radius:10px 0 0 10px;
+  box-shadow:-4px 8px 24px rgba(14,90,167,.32);
+  font-weight:600;font-size:14px;text-decoration:none;
+  transition:transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.inquiry-tab:hover{transform:translateY(-50%) translateX(-4px);box-shadow:-6px 12px 28px rgba(14,90,167,.42);color:#fff}
+.inquiry-tab .tab-icon{flex:none}
+
+/* WhatsApp side tab */
+.whatsapp-tab{
+  position:fixed;right:0;top:calc(50% + 56px);transform:translateY(-50%);
+  z-index:70;background:linear-gradient(135deg,#1EBE5A,#25D366);color:#fff;
+  width:46px;height:46px;border-radius:10px 0 0 10px;
+  display:grid;place-items:center;
+  box-shadow:-4px 8px 20px rgba(37,211,102,.28);
+  transition:transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.whatsapp-tab:hover{transform:translateY(-50%) translateX(-4px);box-shadow:-6px 12px 24px rgba(37,211,102,.40);color:#fff}
+.whatsapp-tab svg{width:24px;height:24px}
+
+/* Homepage bottom inquiry section */
+.home-inquiry{
+  background:linear-gradient(180deg,var(--bg) 0%,#fff 100%);
+}
+.home-inquiry .inquiry-wrap{
+  display:grid;grid-template-columns:1fr 1.2fr;gap:50px;align-items:center;
+}
+.home-inquiry .inquiry-info h2{font-size:clamp(26px,3.2vw,34px);margin-bottom:12px}
+.home-inquiry .inquiry-info p{color:var(--muted);margin-bottom:22px}
+.home-inquiry .contact-item{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.home-inquiry .contact-item .ci{
+  width:44px;height:44px;border-radius:12px;background:var(--blue-soft);color:var(--blue);
+  display:grid;place-items:center;font-size:20px;flex:none;
+}
+.home-inquiry .contact-item b{display:block;font-size:15px;color:var(--ink)}
+.home-inquiry .contact-item span{font-size:13px;color:var(--muted)}
+.home-inquiry .inquiry-form-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:32px;box-shadow:var(--shadow-lg);
+}
 
 /* ---------- Projects ---------- */
 .proj{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:26px;background:#fff;transition:box-shadow .2s var(--ease),transform .2s var(--ease)}
@@ -449,6 +498,12 @@ details.specs .pane{padding:0 18px 18px}
   .trade-items{flex-direction:column;gap:12px}
   .foot-grid{grid-template-columns:1fr}
   .inquiry-card{padding:26px 22px}
+  .home-inquiry .inquiry-wrap{grid-template-columns:1fr;gap:30px}
+  .home-inquiry .inquiry-form-card{padding:26px 22px}
+  .inquiry-drawer{width:100vw}
+  .inquiry-tab .tab-text{display:none}
+  .inquiry-tab{padding:14px}
+  .whatsapp-tab{top:calc(50% + 50px)}
 }
 
 /* ---------- Skip link (accessibility) ---------- */

@@ -35,32 +35,37 @@
     });
   });
 
-  // Inquiry modal
-  var modal = document.getElementById('inquiryModal');
-  var modalTitle = document.getElementById('inquiryModalTitle');
-  function openModal(title, product) {
-    if (!modal) return;
-    if (modalTitle && title) modalTitle.textContent = title;
-    var pf = document.getElementById('f-product');
+  // Inquiry drawer
+  var drawer = document.getElementById('inquiryDrawer');
+  var overlay = document.getElementById('drawerOverlay');
+  var tab = document.getElementById('inquiryTab');
+  var drawerTitle = drawer ? drawer.querySelector('.drawer-title') : null;
+  function openDrawer(title, product) {
+    if (!drawer) return;
+    if (drawerTitle && title) drawerTitle.textContent = title;
+    var pf = document.getElementById('f-drawer-product');
     if (pf && product) pf.value = product;
-    modal.classList.add('show');
+    drawer.classList.add('show');
+    if (overlay) overlay.classList.add('show');
     document.body.style.overflow = 'hidden';
   }
-  function closeModal() {
-    if (!modal) return;
-    modal.classList.remove('show');
+  function closeDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove('show');
+    if (overlay) overlay.classList.remove('show');
     document.body.style.overflow = '';
   }
+  if (tab) tab.addEventListener('click', function (e) { e.preventDefault(); openDrawer('Click Here To Get Free Quote', ''); });
   document.querySelectorAll('[data-inquiry]').forEach(function (el) {
     el.addEventListener('click', function (e) {
       e.preventDefault();
-      openModal(el.getAttribute('data-inquiry-title') || 'Request a Quote', el.getAttribute('data-inquiry') || '');
+      openDrawer(el.getAttribute('data-inquiry-title') || 'Click Here To Get Free Quote', el.getAttribute('data-inquiry') || '');
     });
   });
-  var closeBtn = document.querySelector('.modal-close');
-  if (closeBtn) closeBtn.addEventListener('click', closeModal);
-  if (modal) modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+  var closeBtn = document.querySelector('.drawer-close');
+  if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+  if (overlay) overlay.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
 
   // Forms — Supabase first, then Web3Forms, then mailto fallback
   function showOk(form) {
@@ -91,7 +96,7 @@
       // Honeypot check
       if (data.get('company_website')) {
         showOk(form); form.reset();
-        if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+        if (form.closest('.inquiry-drawer')) setTimeout(closeDrawer, 1400);
         if (btn) { btn.disabled = false; btn.textContent = orig; }
         return;
       }
@@ -108,7 +113,7 @@
           .catch(function () { mailtoFallback(form); showOk(form); })
           .finally(function () {
             if (btn) { btn.disabled = false; btn.textContent = orig; }
-            if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+            if (form.closest('.inquiry-drawer')) setTimeout(closeDrawer, 1400);
           });
       }
 
@@ -117,7 +122,7 @@
           if (ok) {
             showOk(form); form.reset();
             if (btn) { btn.disabled = false; btn.textContent = orig; }
-            if (form.closest('.modal-back')) setTimeout(closeModal, 1400);
+            if (form.closest('.inquiry-drawer')) setTimeout(closeDrawer, 1400);
           } else { web3Fallback(); }
         });
       } else { web3Fallback(); }

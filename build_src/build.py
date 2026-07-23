@@ -331,22 +331,30 @@ def footer(bp=""):
 
 WHATSAPP_SVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.99 6.45 17.5 2 12.04 2zm5.8 14.14c-.25.69-1.45 1.32-1.99 1.36-.53.04-1.07.24-3.6-.75-2.99-1.14-4.9-4.05-5.05-4.24-.15-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.25.59.84 2.03.91 2.18.07.15.12.32.02.52-.1.19-.15.31-.29.48-.15.18-.31.39-.45.53-.15.15-.3.31-.13.6.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.41.29.14.46.12.63-.07.18-.19.74-.86.94-1.16.2-.3.4-.25.67-.15.28.1 1.77.84 2.07 1 .3.16.5.24.57.37.08.14.08.79-.17 1.48z"/></svg>'
 
-def inquiry_float():
+def inquiry_widget(bp=""):
+    """Right-side slide-out inquiry panel with vertical tab."""
     wa = SITE['whatsapp'].replace("+", "")
-    return f'''<div class="inquiry-float">
-  <a class="fab inquiry" href="#" data-inquiry="Request a Quote" data-inquiry-title="Request a Bulk Quote"><span class="lbl">Get a Quote</span>✉</a>
-  <a class="fab whatsapp" href="https://wa.me/{wa}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><span class="lbl">WhatsApp</span>{WHATSAPP_SVG}</a>
-</div>'''
-
-def inquiry_modal(bp=""):
-    return f'''<div class="modal-back" id="inquiryModal">
-  <div class="modal">
-    <div class="modal-head"><h3 id="inquiryModalTitle">Request a Quote</h3><button class="modal-close" aria-label="Close modal">×</button></div>
-    <div class="modal-body">
-      {inquiry_form(bp, "Request a Quote", suffix="modal")}
+    tab_icon = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'
+    return f'''<div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+<div class="inquiry-drawer" id="inquiryDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div>
+      <div class="drawer-title">Click Here To Get Free Quote</div>
+      <div class="drawer-sub">Factory-direct pricing in 24 hours</div>
     </div>
+    <button class="drawer-close" aria-label="Close quote panel">×</button>
   </div>
-</div>'''
+  <div class="drawer-body">
+    {inquiry_form(bp, "Request a Quote", suffix="drawer")}
+  </div>
+</div>
+<a class="inquiry-tab" href="#" id="inquiryTab" aria-label="Open quote form">
+  <span class="tab-icon" aria-hidden="true">{tab_icon}</span>
+  <span class="tab-text">Get Free Quote</span>
+</a>
+<a class="whatsapp-tab" href="https://wa.me/{wa}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  {WHATSAPP_SVG}
+</a>'''
 
 def scripts(bp="", needs_supabase=False):
     s = f'<script src="{bp}js/main.js"></script>'
@@ -380,7 +388,7 @@ def page(title, desc, kw, body, active="", bp="", banner=None, breadcrumb=None,
                  og_type=og_type, json_ld=json_ld) +
             '<body>' + SKIP_LINK + header(active, bp) +
             '<main id="main">' + h + body + '</main>' +
-            inquiry_float() + inquiry_modal(bp) +
+            inquiry_widget(bp) +
             COOKIE_BANNER + cookie_script +
             footer(bp) + scripts(bp, needs_supabase) + '</body></html>')
 
@@ -441,6 +449,41 @@ def build_home():
     <div class="trade-item"><strong>Shipping:</strong> Sea freight FCL/LCL from Guangzhou</div>
   </div>
 </div></div>'''
+
+    # Homepage bottom inquiry section: contact info (left) + embedded form (right)
+    email = SITE['email']
+    wa = SITE['whatsapp'].replace("+", "")
+    address = SITE['address']
+    email_svg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>'
+    pin_svg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>'
+    home_inquiry = f'''
+<section class="home-inquiry">
+  <div class="wrap">
+    <div class="inquiry-wrap">
+      <div class="inquiry-info">
+        <div class="eyebrow">Talk To Our Team</div>
+        <h2>Get a Factory-Direct Quote Today</h2>
+        <p>Reach our export team by email, WhatsApp or the form — we respond within 24 hours with pricing, specs and shipping options tailored to your market.</p>
+        <div class="contact-item">
+          <span class="ci" aria-hidden="true">{email_svg}</span>
+          <div><b>Email</b><span><a href="mailto:{email}">{email}</a></span></div>
+        </div>
+        <div class="contact-item">
+          <span class="ci" aria-hidden="true">{WHATSAPP_SVG}</span>
+          <div><b>WhatsApp</b><span><a href="https://wa.me/{wa}" target="_blank" rel="noopener">+{wa}</a></span></div>
+        </div>
+        <div class="contact-item">
+          <span class="ci" aria-hidden="true">{pin_svg}</span>
+          <div><b>Factory Address</b><span>{esc(address)}</span></div>
+        </div>
+      </div>
+      <div class="inquiry-form-card">
+        {inquiry_form(bp="", title="Homepage Inquiry", suffix="contact")}
+      </div>
+    </div>
+  </div>
+</section>
+'''
 
     body = f'''
 <section class="hero">
@@ -530,6 +573,8 @@ def build_home():
     </div>
   </div>
 </section>
+
+{home_inquiry}
 '''
     return page("Woneng — Solar Street Lights & Energy Storage Manufacturer | Factory Direct",
                 "Woneng is a B2B manufacturer of solar street lights, solar flood lights and LiFePO4 energy storage systems. Factory direct wholesale, OEM/ODM, Africa & Nigeria off-grid solar solutions. MOQ 50 units, T/T L/C PayPal payment, 15-30 day lead time.",
